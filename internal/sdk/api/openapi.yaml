@@ -1,0 +1,62 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: contact@kable.io
+  description: |
+    Used for generation of SDK
+  title: Kable SDK
+  version: 0.0.1
+servers:
+- description: Kable Live
+  url: https://live.kable.io/api/v1
+- description: Kable Test
+  url: https://test.kable.io/api/v1
+tags:
+- description: The authenticate API allows developers to test authentication
+  name: authenticate
+paths:
+  /authenticate:
+    post:
+      description: |
+        Test authentication
+      operationId: authenticate
+      parameters:
+      - description: "Your client ID, found in the dashboard of your Kable account."
+        example: kci_3c90e9ac92c64f31ae8ed84d21e18740
+        explode: false
+        in: header
+        name: Kable-Client-Id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "Your `LIVE` or `TEST` secret key. Customers exist across all\
+          \ environments, so it does not matter which environment you use to fetch\
+          \ customers."
+        example: sk_test.jI92Cbu0.XeHWdYM1VTLy4oLtGMw8wrmpt5q9d04n
+        explode: false
+        in: header
+        name: Kable-Client-Secret
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Your client ID or the client ID of the customer you are fetching.
+        example: kci_3c90e9ac92c64f31ae8ed84d21e18740
+        explode: false
+        in: header
+        name: X-Client-Id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: successful authentication
+        "401":
+          description: unauthorized
+      summary: test authentication
+      tags:
+      - authenticate
+components:
+  schemas: {}
