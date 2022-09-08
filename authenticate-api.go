@@ -1,12 +1,13 @@
 package kable
 
 import (
-	"github.com/Kable-io/kable-go/internal/sdk"
 	"log"
+
+	"github.com/Kable-io/kable-go/internal/auth"
 )
 
 type AuthenticateApi struct {
-	api     *sdk.APIClient
+	api     *auth.APIClient
 	options *KableOptions
 }
 
@@ -25,7 +26,7 @@ func (a *AuthenticateApi) Authenticate() error {
 	return nil
 }
 
-func NewAuthenticateApi(apiClient *sdk.APIClient, options *KableOptions) *AuthenticateApi {
+func NewAuthenticateApi(apiClient *auth.APIClient, options *KableOptions) *AuthenticateApi {
 	return &AuthenticateApi{
 		api:     apiClient,
 		options: options,

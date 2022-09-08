@@ -3,12 +3,13 @@ package kable
 import (
 	"context"
 	"fmt"
-	"github.com/Kable-io/kable-go/internal/openapi"
-	"github.com/Kable-io/kable-go/internal/sdk"
-	"github.com/Kable-io/kable-go/internal/version"
 	"log"
 	"net/http"
 	"net/url"
+
+	"github.com/Kable-io/kable-go/internal/auth"
+	"github.com/Kable-io/kable-go/internal/openapi"
+	"github.com/Kable-io/kable-go/internal/version"
 )
 
 type (
@@ -32,7 +33,7 @@ type (
 
 func New(options *KableOptions) *Kable {
 	apiConf := openapi.NewConfiguration()
-	sdkConf := sdk.NewConfiguration()
+	sdkConf := auth.NewConfiguration()
 
 	if options != nil {
 		if options.BaseUrl != nil {
@@ -59,7 +60,7 @@ func New(options *KableOptions) *Kable {
 	// TODO : populate conf here.
 
 	apiClient := openapi.NewAPIClient(apiConf)
-	sdkClient := sdk.NewAPIClient(sdkConf)
+	sdkClient := auth.NewAPIClient(sdkConf)
 
 	authApi := NewAuthenticateApi(sdkClient, options)
 	err := authApi.Authenticate()

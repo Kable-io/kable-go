@@ -2,11 +2,15 @@ package kable
 
 import (
 	"context"
-	"github.com/Kable-io/kable-go/internal/openapi"
-	"github.com/ehsaniara/gointerlock"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
+
+	"github.com/Kable-io/kable-go/internal/openapi"
+	"github.com/ehsaniara/gointerlock"
 )
 
 type (
@@ -48,14 +52,29 @@ func (e *EventsApi) scheduleFlushQueue() {
 	}
 }
 
+func (e *EventsApi) handleShutdown(stop context.CancelFunc) {
+	defer stop()
+	<-e.ctx.Done()
+	log.Println("Shutdown signal received. Flushing event queue.")
+	e.handleFlush()
+
+}
+
 func NewEventsApi(apiClient *openapi.APIClient, options *KableOptions) *EventsApi {
+	providedCtx := *options.Context
+	extendedCtx, stop := signal.NotifyContext(providedCtx, os.Interrupt, syscall.SIGTERM)
+
 	eventsApi := &EventsApi{
 		api:     apiClient,
 		options: options,
+		ctx:     extendedCtx,
 		queue:   []Event{},
 	}
 
 	go eventsApi.scheduleFlushQueue()
+	go eventsApi.handleShutdown(stop)
+
+	// Listening to the OS Signals
 
 	return eventsApi
 }
