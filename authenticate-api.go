@@ -10,7 +10,7 @@ type AuthenticateApi struct {
 	options *KableOptions
 }
 
-func (a *AuthenticateApi) TestAuthentication() error {
+func (a *AuthenticateApi) Authenticate() error {
 	req := a.api.AuthenticateApi.Authenticate(*a.options.Context)
 	req = req.KableClientId(a.options.KableClientId)
 	req = req.KableClientSecret(a.options.KableClientSecret)

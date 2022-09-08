@@ -62,7 +62,7 @@ func New(options *KableOptions) *Kable {
 	sdkClient := sdk.NewAPIClient(sdkConf)
 
 	authApi := NewAuthenticateApi(sdkClient, options)
-	err := authApi.TestAuthentication()
+	err := authApi.Authenticate()
 
 	if err != nil {
 		log.Fatal(err)
