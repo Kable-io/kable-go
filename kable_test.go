@@ -1,6 +1,7 @@
 package kable_test
 
 import (
+	"context"
 	"log"
 	"net/url"
 	"os"
@@ -22,12 +23,15 @@ func TestRecord(t *testing.T) {
 	if err != nil {
 		log.Fatal("Failed to parse KABLE_BASE_API_URL into url: ", err)
 	}
+
+	ctx := context.Background()
 	options := kable.KableOptions{
 		KableClientId:     os.Getenv("KABLE_CLIENT_ID"),
 		KableClientSecret: os.Getenv("KABLE_CLIENT_SECRET"),
 		Debug:             false,
 		MaxQueueSize:      10,
 		BaseUrl:           baseUrl,
+		Context:           &ctx,
 	}
 
 	c := kable.New(&options)

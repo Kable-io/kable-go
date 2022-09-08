@@ -2,16 +2,16 @@ package kable
 
 import (
 	"context"
-	"encoding/json"
 	"github.com/Kable-io/kable-go/internal/openapi"
 	"github.com/ehsaniara/gointerlock"
-	"io"
 	"log"
+	"net/http"
 	"time"
 )
 
 type (
-	Event openapi.Event
+	Event       openapi.Event
+	ApiResponse interface{}
 )
 
 type EventsApi struct {
@@ -32,7 +32,7 @@ func (e *EventsApi) handleFlush() {
 			log.Fatal(err)
 		}
 
-		log.Println("Flush Response : ", res.Message)
+		log.Println("Flush Response : ", res.Body)
 	}
 }
 
@@ -52,7 +52,6 @@ func NewEventsApi(apiClient *openapi.APIClient, options *KableOptions) *EventsAp
 	eventsApi := &EventsApi{
 		api:     apiClient,
 		options: options,
-		ctx:     context.Background(),
 		queue:   []Event{},
 	}
 
@@ -61,8 +60,8 @@ func NewEventsApi(apiClient *openapi.APIClient, options *KableOptions) *EventsAp
 	return eventsApi
 }
 
-func (e *EventsApi) flush() (*RecordEventOut, error) {
-	req := e.api.EventsApi.CreateEvents(context.Background())
+func (e *EventsApi) flush() (*http.Response, error) {
+	req := e.api.EventsApi.CreateEvents(*e.options.Context)
 	var openapiEvents []openapi.Event
 	for _, event := range e.queue {
 		openapiEvents = append(openapiEvents, openapi.Event(event))
@@ -80,18 +79,7 @@ func (e *EventsApi) flush() (*RecordEventOut, error) {
 	// Set the queue to empty.
 	e.queue = []Event{}
 
-	ret := &RecordEventOut{}
-	bytes, err := io.ReadAll(res.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = json.Unmarshal(bytes, ret)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return ret, nil
+	return res, nil
 }
 
 func (e *EventsApi) Record(events ...Event) {

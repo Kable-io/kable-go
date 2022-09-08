@@ -1,6 +1,7 @@
 package kable
 
 import (
+	"context"
 	"fmt"
 	"github.com/Kable-io/kable-go/internal/openapi"
 	"github.com/Kable-io/kable-go/internal/sdk"
@@ -20,6 +21,7 @@ type (
 
 		BaseUrl    *url.URL
 		HTTPClient *http.Client
+		Context    *context.Context
 	}
 
 	Kable struct {
