@@ -1,14 +1,56 @@
 package kable_test
 
 import (
+	"context"
+	"log"
+	"net/url"
+	"os"
 	"testing"
+	"time"
 
-	kable "github.com/Kable-io/kable-go"
+	"github.com/joho/godotenv"
+
+	"github.com/Kable-io/kable-go"
 )
 
-func TestConvert(t *testing.T) {
-	c := kable.New()
-	c.Event.Record()
-	t.Log("Hello World")
-	t.Fail()
+func TestRecord(t *testing.T) {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	baseUrl, err := url.Parse(os.Getenv("KABLE_BASE_API_URL"))
+	if err != nil {
+		log.Fatal("Failed to parse KABLE_BASE_API_URL into url: ", err)
+	}
+
+	ctx := context.Background()
+	options := kable.KableOptions{
+		KableClientId:     os.Getenv("KABLE_CLIENT_ID"),
+		KableClientSecret: os.Getenv("KABLE_CLIENT_SECRET"),
+		Debug:             false,
+		MaxQueueSize:      10,
+		BaseUrl:           baseUrl,
+		Context:           &ctx,
+	}
+
+	c := kable.New(&options)
+
+	event := kable.Event{
+		ClientId:  "elephant-tech",
+		Timestamp: time.Now(),
+		Data: map[string]interface{}{
+			"messageId":  "abc123",
+			"characters": 12,
+			"successful": true,
+		},
+	}
+
+	c.Record(event)
+	time.Sleep(30 * time.Second)
+
+	if err != nil {
+		t.Log("Error : ", err)
+		t.Fail()
+	}
 }
