@@ -54,14 +54,9 @@ func (e *EventsApi) scheduleFlushQueue() {
 
 func (e *EventsApi) handleShutdown(stop context.CancelFunc) {
 	defer stop()
-	for {
-		select {
-		case <-e.ctx.Done():
-			log.Println("Shutdown signal received. Flushing event queue.")
-			e.handleFlush()
-			return
-		}
-	}
+	<-e.ctx.Done()
+	log.Println("Shutdown signal received. Flushing event queue.")
+	e.handleFlush()
 
 }
 
