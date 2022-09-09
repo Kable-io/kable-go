@@ -34,7 +34,7 @@ type RecordEventOut struct {
 
 func (e *EventsApi) handleFlush() {
 	e.lock.Lock()
-	e.lock.Unlock()
+	defer e.lock.Unlock()
 
 	if len(e.queue) > 0 {
 		if e.options.Debug {
