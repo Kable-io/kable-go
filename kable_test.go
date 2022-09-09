@@ -1,9 +1,7 @@
 package kable_test
 
 import (
-	"context"
 	"log"
-	"net/url"
 	"os"
 	"testing"
 	"time"
@@ -19,19 +17,12 @@ func TestRecord(t *testing.T) {
 		log.Fatal("Error loading .env file")
 	}
 
-	baseUrl, err := url.Parse(os.Getenv("KABLE_BASE_API_URL"))
-	if err != nil {
-		log.Fatal("Failed to parse KABLE_BASE_API_URL into url: ", err)
-	}
-
-	ctx := context.Background()
 	options := kable.KableOptions{
 		KableClientId:     os.Getenv("KABLE_CLIENT_ID"),
 		KableClientSecret: os.Getenv("KABLE_CLIENT_SECRET"),
-		Debug:             false,
+		Debug:             true,
 		MaxQueueSize:      10,
-		BaseUrl:           baseUrl,
-		Context:           &ctx,
+		BaseUrl:           os.Getenv("KABLE_BASE_API_URL"),
 	}
 
 	c := kable.New(&options)

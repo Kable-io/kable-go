@@ -31,12 +31,16 @@ type RecordEventOut struct {
 
 func (e *EventsApi) handleFlush() {
 	if len(e.queue) > 0 {
+		if e.options.Debug {
+			log.Printf("Flushing queue...")
+		}
 		res, err := e.flush()
 		if err != nil {
 			log.Fatal(err)
 		}
-
-		log.Println("Flush Response : ", res.Body)
+		if e.options.Debug {
+			log.Printf("Flushed queue. Response : %s", res.Body)
+		}
 	}
 }
 
@@ -57,17 +61,16 @@ func (e *EventsApi) handleShutdown(stop context.CancelFunc) {
 	<-e.ctx.Done()
 	log.Println("Shutdown signal received. Flushing event queue.")
 	e.handleFlush()
-
+	log.Fatal("Shutting down.", e.ctx.Err())
 }
 
 func NewEventsApi(apiClient *openapi.APIClient, options *KableOptions) *EventsApi {
-	providedCtx := *options.Context
-	extendedCtx, stop := signal.NotifyContext(providedCtx, os.Interrupt, syscall.SIGTERM)
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 
 	eventsApi := &EventsApi{
 		api:     apiClient,
 		options: options,
-		ctx:     extendedCtx,
+		ctx:     ctx,
 		queue:   []Event{},
 	}
 
@@ -80,7 +83,7 @@ func NewEventsApi(apiClient *openapi.APIClient, options *KableOptions) *EventsAp
 }
 
 func (e *EventsApi) flush() (*http.Response, error) {
-	req := e.api.EventsApi.CreateEvents(*e.options.Context)
+	req := e.api.EventsApi.CreateEvents(context.Background())
 	var openapiEvents []openapi.Event
 	for _, event := range e.queue {
 		openapiEvents = append(openapiEvents, openapi.Event(event))
