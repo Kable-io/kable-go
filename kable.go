@@ -1,7 +1,6 @@
 package kable
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/Kable-io/kable-go/internal/auth"
 	"github.com/Kable-io/kable-go/internal/openapi"
@@ -28,17 +27,17 @@ type (
 	}
 )
 
+func (options *KableOptions) String() string {
+	return fmt.Sprintf("KableClientId=%s, KableClientSecret=%s, Debug=%t, MaxQueueSize=%d, BaseUrl=%s", options.KableClientId, options.KableClientSecret, options.Debug, options.MaxQueueSize, options.BaseUrl)
+
+}
 func New(options *KableOptions) *Kable {
 	apiConf := openapi.NewConfiguration()
 	authConf := auth.NewConfiguration()
 
 	if options != nil {
 		if options.Debug {
-			jsonOptions, err := json.Marshal(options)
-			if err != nil {
-				log.Println("Something is wrong with the options provided to Kable. Cannot parse to JSON.")
-			}
-			log.Println("Instantiating Kable with options : ", string(jsonOptions))
+			log.Println("Instantiating Kable with options : ", options)
 		}
 		baseUrl, err := url.Parse(options.BaseUrl)
 		if err != nil {

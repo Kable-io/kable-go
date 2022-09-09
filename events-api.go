@@ -61,7 +61,7 @@ func (e *EventsApi) handleShutdown(stop context.CancelFunc) {
 	<-e.ctx.Done()
 	log.Println("Shutdown signal received. Flushing event queue.")
 	e.handleFlush()
-
+	log.Fatal("Shutting down.", e.ctx.Err())
 }
 
 func NewEventsApi(apiClient *openapi.APIClient, options *KableOptions) *EventsApi {
