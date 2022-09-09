@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"sync"
 	"syscall"
 	"time"
 
@@ -24,6 +25,7 @@ type EventsApi struct {
 	options *KableOptions
 	ctx     context.Context
 	queue   []Event
+	lock    sync.Mutex
 }
 
 type RecordEventOut struct {
@@ -31,6 +33,9 @@ type RecordEventOut struct {
 }
 
 func (e *EventsApi) handleFlush() {
+	e.lock.Lock()
+	e.lock.Unlock()
+
 	if len(e.queue) > 0 {
 		if e.options.Debug {
 			log.Printf("Flushing queue...")
@@ -89,18 +94,23 @@ func NewEventsApi(apiClient *openapi.APIClient, options *KableOptions) *EventsAp
 
 func (e *EventsApi) flush() (*http.Response, []Event, error) {
 	req := e.api.EventsApi.CreateEvents(context.Background())
-	var openapiEvents []openapi.Event
-	var toFlush = []Event{}
+	var toFlush []Event
 	if len(e.queue) > e.options.MaxQueueSize {
-		toFlush = e.queue[0:e.options.MaxQueueSize]
+		temp := e.queue[0:e.options.MaxQueueSize]
+		toFlush = temp
 	} else {
 		toFlush = e.queue
 	}
 
 	e.queue = e.queue[len(toFlush):len(e.queue)]
 
+	var openapiEvents []openapi.Event
 	for _, event := range toFlush {
 		openapiEvents = append(openapiEvents, openapi.Event(event))
+	}
+
+	if e.options.Debug {
+		log.Printf("Attempting to flush %d events.", len(openapiEvents))
 	}
 
 	req = req.Event(openapiEvents)
