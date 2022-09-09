@@ -1,6 +1,7 @@
 package kable
 
 import (
+	"context"
 	"log"
 
 	"github.com/Kable-io/kable-go/internal/auth"
@@ -12,7 +13,7 @@ type AuthenticateApi struct {
 }
 
 func (a *AuthenticateApi) Authenticate() error {
-	req := a.api.AuthenticateApi.Authenticate(*a.options.Context)
+	req := a.api.AuthenticateApi.Authenticate(context.Background())
 	req = req.KableClientId(a.options.KableClientId)
 	req = req.KableClientSecret(a.options.KableClientSecret)
 	req = req.XClientId(a.options.KableClientId)
