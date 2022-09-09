@@ -2,10 +2,12 @@ package kable
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"sync"
 	"syscall"
 	"time"
 
@@ -23,6 +25,7 @@ type EventsApi struct {
 	options *KableOptions
 	ctx     context.Context
 	queue   []Event
+	lock    sync.Mutex
 }
 
 type RecordEventOut struct {
@@ -30,15 +33,22 @@ type RecordEventOut struct {
 }
 
 func (e *EventsApi) handleFlush() {
+	e.lock.Lock()
+	defer e.lock.Unlock()
+
 	if len(e.queue) > 0 {
 		if e.options.Debug {
 			log.Printf("Flushing queue...")
 		}
-		res, err := e.flush()
+		res, toFlush, err := e.flush()
 		if err != nil {
-			log.Fatal(err)
-		}
-		if e.options.Debug {
+			log.Printf("Error flushing queue: %s", err)
+			jsonOutput, err := json.Marshal(toFlush)
+			if err != nil {
+				log.Printf("Unable to convert events to JSON: %s", err)
+			}
+			log.Printf("[Kable] : %s", jsonOutput)
+		} else if e.options.Debug {
 			log.Printf("Flushed queue. Response : %s", res.Body)
 		}
 	}
@@ -52,7 +62,7 @@ func (e *EventsApi) scheduleFlushQueue() {
 
 	err := job.Run(e.ctx)
 	if err != nil {
-		log.Fatalf("Error: %s", err)
+		log.Printf("Error running scheduled flush queue: %s", err)
 	}
 }
 
@@ -82,11 +92,25 @@ func NewEventsApi(apiClient *openapi.APIClient, options *KableOptions) *EventsAp
 	return eventsApi
 }
 
-func (e *EventsApi) flush() (*http.Response, error) {
+func (e *EventsApi) flush() (*http.Response, []Event, error) {
 	req := e.api.EventsApi.CreateEvents(context.Background())
+	var toFlush []Event
+	if len(e.queue) > e.options.MaxQueueSize {
+		temp := e.queue[0:e.options.MaxQueueSize]
+		toFlush = temp
+	} else {
+		toFlush = e.queue
+	}
+
+	e.queue = e.queue[len(toFlush):len(e.queue)]
+
 	var openapiEvents []openapi.Event
-	for _, event := range e.queue {
+	for _, event := range toFlush {
 		openapiEvents = append(openapiEvents, openapi.Event(event))
+	}
+
+	if e.options.Debug {
+		log.Printf("Attempting to flush %d events.", len(openapiEvents))
 	}
 
 	req = req.Event(openapiEvents)
@@ -95,23 +119,18 @@ func (e *EventsApi) flush() (*http.Response, error) {
 
 	res, err := req.Execute()
 	if err != nil {
-		return nil, wrapError(err, res)
+		return nil, toFlush, wrapError(err, res)
 	}
 
 	// Set the queue to empty.
 	e.queue = []Event{}
 
-	return res, nil
+	return res, toFlush, nil
 }
 
 func (e *EventsApi) Record(events ...Event) {
 	e.queue = append(e.queue, events...)
 	if len(e.queue) >= e.options.MaxQueueSize {
-		res, err := e.flush()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		log.Println("Response : ", res)
+		e.handleFlush()
 	}
 }

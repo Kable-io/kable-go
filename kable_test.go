@@ -38,7 +38,10 @@ func TestRecord(t *testing.T) {
 	}
 
 	c.Record(event)
-	time.Sleep(30 * time.Second)
+	time.Sleep(10 * time.Second)
+	for i := 0; i < 50; i++ {
+		c.Record(event)
+	}
 
 	if err != nil {
 		t.Log("Error : ", err)
