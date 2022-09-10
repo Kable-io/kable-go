@@ -1,7 +1,7 @@
 /*
 Kable SDK
 
-Used for generation of SDK 
+Used for generation of SDK
 
 API version: 0.0.1
 Contact: contact@kable.io
@@ -83,7 +83,6 @@ func (a *AuthenticateApiService) AuthenticateExecute(r ApiAuthenticateRequest) (
 	}
 
 	localVarPath := localBasePath + "/authenticate"
-
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}

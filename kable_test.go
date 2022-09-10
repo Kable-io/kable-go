@@ -1,31 +1,26 @@
 package kable_test
 
 import (
-	"log"
-	"os"
 	"testing"
 	"time"
-
-	"github.com/joho/godotenv"
 
 	"github.com/Kable-io/kable-go"
 )
 
 func TestRecord(t *testing.T) {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	log.Fatal("Error loading .env file")
+	// }
 
 	options := kable.KableOptions{
-		KableClientId:     os.Getenv("KABLE_CLIENT_ID"),
-		KableClientSecret: os.Getenv("KABLE_CLIENT_SECRET"),
+		KableClientId:     "",
+		KableClientSecret: "",
 		Debug:             true,
 		MaxQueueSize:      10,
-		BaseUrl:           os.Getenv("KABLE_BASE_API_URL"),
 	}
 
-	c := kable.New(&options)
+	client := kable.New(&options)
 
 	event := kable.Event{
 		ClientId:  "elephant-tech",
@@ -37,14 +32,14 @@ func TestRecord(t *testing.T) {
 		},
 	}
 
-	c.Record(event)
-	time.Sleep(10 * time.Second)
-	for i := 0; i < 50; i++ {
-		c.Record(event)
-	}
+	client.Record(event)
+	// time.Sleep(10 * time.Second)
+	// for i := 0; i < 1; i++ {
+	// 	c.Record(event)
+	// }
 
-	if err != nil {
-		t.Log("Error : ", err)
-		t.Fail()
-	}
+	// if err != nil {
+	// 	t.Log("Error : ", err)
+	// 	t.Fail()
+	// }
 }

@@ -1,8 +1,9 @@
 package kable
 
 import (
-	"github.com/Kable-io/kable-go/internal/openapi"
 	"net/http"
+
+	"github.com/Kable-io/kable-go/internal/openapi"
 )
 
 // Error provides access to the body, status, and error on returned errors.
