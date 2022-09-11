@@ -14,10 +14,11 @@ import (
 	"github.com/ehsaniara/gointerlock"
 )
 
-type (
-	Event       openapi.Event
-	ApiResponse interface{}
-)
+type Event struct {
+	ClientId  string                 `json:"clientId"`
+	Data      map[string]interface{} `json:"data,omitempty"`
+	Timestamp *time.Time             `json:"timestamp,omitempty"`
+}
 
 type EventsApi struct {
 	api     *openapi.APIClient
@@ -44,14 +45,21 @@ func (e *EventsApi) flush() {
 
 	req := e.api.EventsApi.CreateEvents(context.Background())
 
-	var eventsToSend []Event
-	copy(eventsToSend, e.queue)
-	var countToSend = len(eventsToSend)
-
 	var openapiEvents []openapi.Event
-	for _, event := range eventsToSend {
-		openapiEvents = append(openapiEvents, openapi.Event(event))
+	for _, event := range e.queue {
+		var timestamp = time.Now()
+		if event.Timestamp != nil {
+			timestamp = *event.Timestamp
+		}
+
+		openapiEvents = append(openapiEvents, openapi.Event{
+			ClientId:  event.ClientId,
+			Timestamp: timestamp,
+			Data:      event.Data,
+		})
 	}
+
+	var countToSend = len(openapiEvents)
 
 	if e.options.Debug {
 		log.Printf("[KABLE] Flushing %d events", countToSend)
@@ -64,7 +72,7 @@ func (e *EventsApi) flush() {
 	_, err := req.Execute()
 	if err != nil {
 		log.Printf("[KABLE] Failed to send %d events to Kable: %s", countToSend, err)
-		for _, event := range eventsToSend {
+		for _, event := range openapiEvents {
 			jsonEvent, err := json.Marshal(event)
 			if err != nil {
 				log.Printf("[KABLE] Kable Event (Error): %s", event)
@@ -77,7 +85,7 @@ func (e *EventsApi) flush() {
 
 	log.Printf("[KABLE] Successfully sent %d events to Kable server", countToSend)
 
-	// Set the queue to empty.
+	// Remove events from queue that have been sent
 	e.queue = e.queue[countToSend-1:]
 }
 
