@@ -27,9 +27,13 @@ func (a *AuthenticateApi) Authenticate() error {
 	req = req.KableClientSecret(a.options.KableClientSecret)
 	req = req.XClientId(a.options.KableClientId)
 
+	if a.options.Debug {
+		log.Printf("[KABLE] Authenticating with Kable at %s", a.api.GetConfig().Host)
+	}
+
 	_, err := a.api.AuthenticateApi.AuthenticateExecute(req)
 	if err != nil {
-		log.Fatal("[KABLE] Failed to initialize Kable: Unauthorized", err)
+		log.Fatal("[KABLE] Failed to initialize Kable: ", err)
 		return err
 	}
 
