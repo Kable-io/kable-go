@@ -86,7 +86,7 @@ func (e *EventsApi) flush() {
 	log.Printf("[KABLE] Successfully sent %d events to Kable server", countToSend)
 
 	// Remove events from queue that have been sent
-	e.queue = e.queue[countToSend-1:]
+	e.queue = e.queue[countToSend:]
 }
 
 func (e *EventsApi) scheduleFlushQueue() {
