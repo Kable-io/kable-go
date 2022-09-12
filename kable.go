@@ -2,12 +2,13 @@ package kable
 
 import (
 	"fmt"
+	"log"
+	"net/http"
+	"strings"
+
 	"github.com/Kable-io/kable-go/internal/auth"
 	"github.com/Kable-io/kable-go/internal/openapi"
 	"github.com/Kable-io/kable-go/internal/version"
-	"log"
-	"net/http"
-	"net/url"
 )
 
 type (
@@ -16,52 +17,49 @@ type (
 		KableClientSecret string
 		Debug             bool
 		MaxQueueSize      int
-		BaseUrl           string
 		HTTPClient        *http.Client
 	}
 
 	Kable struct {
-		eventsApi       *EventsApi
-		authenticateApi *AuthenticateApi
-		options         *KableOptions
+		eventsApi *EventsApi
+		options   *KableOptions
 	}
 )
 
-func (options *KableOptions) String() string {
-	return fmt.Sprintf("KableClientId=%s, KableClientSecret=%s, Debug=%t, MaxQueueSize=%d, BaseUrl=%s", options.KableClientId, options.KableClientSecret, options.Debug, options.MaxQueueSize, options.BaseUrl)
-
-}
 func New(options *KableOptions) *Kable {
+	log.Println("[KABLE] Initializing Kable")
+
+	if options == nil {
+		log.Fatal("[KABLE] Invalid Kable configuration, options not found")
+	}
+
+	if options.MaxQueueSize > 1000 {
+		options.MaxQueueSize = 1000
+	}
+
+	if options.MaxQueueSize < 1 {
+		options.MaxQueueSize = 1
+	}
+
+	log.Printf("[KABLE] Starting Kable with MaxQueueSize=%d, Debug=%t", options.MaxQueueSize, options.Debug)
+
 	apiConf := openapi.NewConfiguration()
 	authConf := auth.NewConfiguration()
 
-	if options != nil {
-		if options.Debug {
-			log.Println("Instantiating Kable with options : ", options)
-		}
-		baseUrl, err := url.Parse(options.BaseUrl)
-		if err != nil {
-			log.Fatal("baseUrl is not a valid url.", err)
-		}
-		apiConf.Scheme = baseUrl.Scheme
-		apiConf.Host = baseUrl.Host
-		authConf.Scheme = baseUrl.Scheme
-		authConf.Host = baseUrl.Host
-
+	var isLive bool = strings.HasPrefix(options.KableClientSecret, "sk_live")
+	if isLive {
+		apiConf.Servers = apiConf.Servers[0:1]
+		authConf.Servers = authConf.Servers[0:1]
 	} else {
-		log.Fatal("Must specify kable options")
+		apiConf.Servers = apiConf.Servers[1:2]
+		authConf.Servers = authConf.Servers[1:2]
 	}
 
 	apiConf.AddDefaultHeader("Content-Type", "application/json")
 	authConf.AddDefaultHeader("Content-Type", "application/json")
 
-	apiConf.AddDefaultHeader("KABLE-ENVIRONMENT", "TEST")
-	authConf.AddDefaultHeader("KABLE-ENVIRONMENT", "TEST")
-
 	apiConf.UserAgent = fmt.Sprintf("kable-libs/%s/go", version.Version)
 	authConf.UserAgent = fmt.Sprintf("kable-libs/%s/go", version.Version)
-
-	// TODO : populate conf here.
 
 	apiClient := openapi.NewAPIClient(apiConf)
 	authClient := auth.NewAPIClient(authConf)
@@ -72,19 +70,18 @@ func New(options *KableOptions) *Kable {
 	if err != nil {
 		log.Fatal(err)
 	} else {
-		log.Println("Successfully authenticated...")
+		log.Println("[KABLE] Kable initialized successfully")
 	}
 
 	return &Kable{
-		eventsApi:       NewEventsApi(apiClient, options),
-		authenticateApi: NewAuthenticateApi(authClient, options),
-		options:         options,
+		eventsApi: NewEventsApi(apiClient, options),
+		options:   options,
 	}
 }
 
 func (k *Kable) Record(events ...Event) {
 	if k.options.Debug {
-		log.Printf("Received %d event(s) to record.", len(events))
+		log.Printf("[KABLE] Received %d event(s) to record", len(events))
 	}
-	k.eventsApi.Record(events...)
+	k.eventsApi.EnqueueEvent(events...)
 }
