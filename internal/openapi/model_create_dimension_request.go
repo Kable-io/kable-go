@@ -15,138 +15,138 @@ import (
 	"encoding/json"
 )
 
-// AddCustomerPlansRequest struct for AddCustomerPlansRequest
-type AddCustomerPlansRequest struct {
-	// The identifier for a single plan.
-	PlanId *string `json:"planId,omitempty"`
-	// The identifiers for many plans.
-	PlanIds []string `json:"planIds,omitempty"`
+// CreateDimensionRequest struct for CreateDimensionRequest
+type CreateDimensionRequest struct {
+	// The key by which Kable identifies the dimension in your usage events.
+	Key *string `json:"key,omitempty"`
+	// A human-readable name for the dimension which will be visible in dashboards and on invoices. Dimension names should be singular, not plural (ie \"User,\" not \"Users\").
+	Name *string `json:"name,omitempty"`
 }
 
-// NewAddCustomerPlansRequest instantiates a new AddCustomerPlansRequest object
+// NewCreateDimensionRequest instantiates a new CreateDimensionRequest object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAddCustomerPlansRequest() *AddCustomerPlansRequest {
-	this := AddCustomerPlansRequest{}
+func NewCreateDimensionRequest() *CreateDimensionRequest {
+	this := CreateDimensionRequest{}
 	return &this
 }
 
-// NewAddCustomerPlansRequestWithDefaults instantiates a new AddCustomerPlansRequest object
+// NewCreateDimensionRequestWithDefaults instantiates a new CreateDimensionRequest object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewAddCustomerPlansRequestWithDefaults() *AddCustomerPlansRequest {
-	this := AddCustomerPlansRequest{}
+func NewCreateDimensionRequestWithDefaults() *CreateDimensionRequest {
+	this := CreateDimensionRequest{}
 	return &this
 }
 
-// GetPlanId returns the PlanId field value if set, zero value otherwise.
-func (o *AddCustomerPlansRequest) GetPlanId() string {
-	if o == nil || o.PlanId == nil {
+// GetKey returns the Key field value if set, zero value otherwise.
+func (o *CreateDimensionRequest) GetKey() string {
+	if o == nil || o.Key == nil {
 		var ret string
 		return ret
 	}
-	return *o.PlanId
+	return *o.Key
 }
 
-// GetPlanIdOk returns a tuple with the PlanId field value if set, nil otherwise
+// GetKeyOk returns a tuple with the Key field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AddCustomerPlansRequest) GetPlanIdOk() (*string, bool) {
-	if o == nil || o.PlanId == nil {
+func (o *CreateDimensionRequest) GetKeyOk() (*string, bool) {
+	if o == nil || o.Key == nil {
 		return nil, false
 	}
-	return o.PlanId, true
+	return o.Key, true
 }
 
-// HasPlanId returns a boolean if a field has been set.
-func (o *AddCustomerPlansRequest) HasPlanId() bool {
-	if o != nil && o.PlanId != nil {
+// HasKey returns a boolean if a field has been set.
+func (o *CreateDimensionRequest) HasKey() bool {
+	if o != nil && o.Key != nil {
 		return true
 	}
 
 	return false
 }
 
-// SetPlanId gets a reference to the given string and assigns it to the PlanId field.
-func (o *AddCustomerPlansRequest) SetPlanId(v string) {
-	o.PlanId = &v
+// SetKey gets a reference to the given string and assigns it to the Key field.
+func (o *CreateDimensionRequest) SetKey(v string) {
+	o.Key = &v
 }
 
-// GetPlanIds returns the PlanIds field value if set, zero value otherwise.
-func (o *AddCustomerPlansRequest) GetPlanIds() []string {
-	if o == nil || o.PlanIds == nil {
-		var ret []string
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *CreateDimensionRequest) GetName() string {
+	if o == nil || o.Name == nil {
+		var ret string
 		return ret
 	}
-	return o.PlanIds
+	return *o.Name
 }
 
-// GetPlanIdsOk returns a tuple with the PlanIds field value if set, nil otherwise
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AddCustomerPlansRequest) GetPlanIdsOk() ([]string, bool) {
-	if o == nil || o.PlanIds == nil {
+func (o *CreateDimensionRequest) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
 		return nil, false
 	}
-	return o.PlanIds, true
+	return o.Name, true
 }
 
-// HasPlanIds returns a boolean if a field has been set.
-func (o *AddCustomerPlansRequest) HasPlanIds() bool {
-	if o != nil && o.PlanIds != nil {
+// HasName returns a boolean if a field has been set.
+func (o *CreateDimensionRequest) HasName() bool {
+	if o != nil && o.Name != nil {
 		return true
 	}
 
 	return false
 }
 
-// SetPlanIds gets a reference to the given []string and assigns it to the PlanIds field.
-func (o *AddCustomerPlansRequest) SetPlanIds(v []string) {
-	o.PlanIds = v
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *CreateDimensionRequest) SetName(v string) {
+	o.Name = &v
 }
 
-func (o AddCustomerPlansRequest) MarshalJSON() ([]byte, error) {
+func (o CreateDimensionRequest) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.PlanId != nil {
-		toSerialize["planId"] = o.PlanId
+	if o.Key != nil {
+		toSerialize["key"] = o.Key
 	}
-	if o.PlanIds != nil {
-		toSerialize["planIds"] = o.PlanIds
+	if o.Name != nil {
+		toSerialize["name"] = o.Name
 	}
 	return json.Marshal(toSerialize)
 }
 
-type NullableAddCustomerPlansRequest struct {
-	value *AddCustomerPlansRequest
+type NullableCreateDimensionRequest struct {
+	value *CreateDimensionRequest
 	isSet bool
 }
 
-func (v NullableAddCustomerPlansRequest) Get() *AddCustomerPlansRequest {
+func (v NullableCreateDimensionRequest) Get() *CreateDimensionRequest {
 	return v.value
 }
 
-func (v *NullableAddCustomerPlansRequest) Set(val *AddCustomerPlansRequest) {
+func (v *NullableCreateDimensionRequest) Set(val *CreateDimensionRequest) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableAddCustomerPlansRequest) IsSet() bool {
+func (v NullableCreateDimensionRequest) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableAddCustomerPlansRequest) Unset() {
+func (v *NullableCreateDimensionRequest) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableAddCustomerPlansRequest(val *AddCustomerPlansRequest) *NullableAddCustomerPlansRequest {
-	return &NullableAddCustomerPlansRequest{value: val, isSet: true}
+func NewNullableCreateDimensionRequest(val *CreateDimensionRequest) *NullableCreateDimensionRequest {
+	return &NullableCreateDimensionRequest{value: val, isSet: true}
 }
 
-func (v NullableAddCustomerPlansRequest) MarshalJSON() ([]byte, error) {
+func (v NullableCreateDimensionRequest) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableAddCustomerPlansRequest) UnmarshalJSON(src []byte) error {
+func (v *NullableCreateDimensionRequest) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

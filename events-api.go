@@ -12,12 +12,14 @@ import (
 
 	"github.com/Kable-io/kable-go/internal/openapi"
 	"github.com/ehsaniara/gointerlock"
+	"github.com/google/uuid"
 )
 
 type Event struct {
-	ClientId  string                 `json:"clientId"`
-	Data      map[string]interface{} `json:"data,omitempty"`
-	Timestamp *time.Time             `json:"timestamp,omitempty"`
+	ClientId      string                 `json:"clientId"`
+	Data          map[string]interface{} `json:"data,omitempty"`
+	TransactionId string                 `json:"transactionId,omitempty"`
+	Timestamp     *time.Time             `json:"timestamp,omitempty"`
 }
 
 type EventsApi struct {
@@ -52,10 +54,16 @@ func (e *EventsApi) flush() {
 			timestamp = *event.Timestamp
 		}
 
+		if event.TransactionId == "" {
+			transactionId := uuid.New().String()
+			event.TransactionId = transactionId
+		}
+
 		openapiEvents = append(openapiEvents, openapi.Event{
-			ClientId:  event.ClientId,
-			Timestamp: timestamp,
-			Data:      event.Data,
+			ClientId:      event.ClientId,
+			Timestamp:     timestamp,
+			TransactionId: &event.TransactionId,
+			Data:          event.Data,
 		})
 	}
 

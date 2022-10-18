@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **CustomerId** | **string** |  | 
 **ClientId** | **string** |  | 
 **CompanyName** | **string** |  | 
-**Currency** | Pointer to **string** |  | [optional] 
+**Currency** | Pointer to **string** | Three-letter currency code. | [optional] 
 **Status** | Pointer to **string** |  | [optional] 
 **NextInvoiceDate** | Pointer to **time.Time** |  | [optional] 
 **StripeCustomerId** | Pointer to **string** |  | [optional] 

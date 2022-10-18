@@ -22,6 +22,7 @@ type CreateCustomer200Response struct {
 	CustomerId string `json:"customerId"`
 	ClientId string `json:"clientId"`
 	CompanyName string `json:"companyName"`
+	// Three-letter currency code.
 	Currency *string `json:"currency,omitempty"`
 	Status *string `json:"status,omitempty"`
 	NextInvoiceDate *time.Time `json:"nextInvoiceDate,omitempty"`

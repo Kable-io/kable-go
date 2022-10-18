@@ -579,6 +579,121 @@ func (a *CustomersApiService) CreateCustomerExecute(r ApiCreateCustomerRequest) 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiDeleteCustomerRequest struct {
+	ctx context.Context
+	ApiService *CustomersApiService
+	kableClientId *string
+	kableClientSecret *string
+	customerId string
+}
+
+// Your client ID, found in the dashboard of your Kable account.
+func (r ApiDeleteCustomerRequest) KableClientId(kableClientId string) ApiDeleteCustomerRequest {
+	r.kableClientId = &kableClientId
+	return r
+}
+
+// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments of your API.
+func (r ApiDeleteCustomerRequest) KableClientSecret(kableClientSecret string) ApiDeleteCustomerRequest {
+	r.kableClientSecret = &kableClientSecret
+	return r
+}
+
+func (r ApiDeleteCustomerRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteCustomerExecute(r)
+}
+
+/*
+DeleteCustomer delete a customer
+
+Deleting a customer will erase all record of the customer identity in Kable. This action is irreversible, and should only be used for the purposes of GDPR / CCPA.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param customerId The identifier for the customer. You can pass in *either* the `customerId` (as defined by Kable) or the `clientId` (as defined by you).
+ @return ApiDeleteCustomerRequest
+*/
+func (a *CustomersApiService) DeleteCustomer(ctx context.Context, customerId string) ApiDeleteCustomerRequest {
+	return ApiDeleteCustomerRequest{
+		ApiService: a,
+		ctx: ctx,
+		customerId: customerId,
+	}
+}
+
+// Execute executes the request
+func (a *CustomersApiService) DeleteCustomerExecute(r ApiDeleteCustomerRequest) (*http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomersApiService.DeleteCustomer")
+	if err != nil {
+		return nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/customers/{customerId}/delete"
+	localVarPath = strings.Replace(localVarPath, "{"+"customerId"+"}", url.PathEscape(parameterToString(r.customerId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.kableClientId == nil {
+		return nil, reportError("kableClientId is required and must be specified")
+	}
+	if r.kableClientSecret == nil {
+		return nil, reportError("kableClientSecret is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
+	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
 type ApiGetAllCustomersRequest struct {
 	ctx context.Context
 	ApiService *CustomersApiService

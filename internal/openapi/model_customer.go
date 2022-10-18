@@ -25,7 +25,7 @@ type Customer struct {
 	ClientId string `json:"clientId"`
 	// The name of the customer, visible on dashboards, invoices, and reports.
 	CompanyName string `json:"companyName"`
-	// The currency with which this customer pays for plans.
+	// The three-letter currency code with which this customer pays for plans.
 	Currency string `json:"currency"`
 	// The current status of the customer.
 	Status string `json:"status"`

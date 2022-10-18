@@ -4,8 +4,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**CompanyName** | Pointer to **string** |  | [optional] 
-**StripeCustomerId** | Pointer to **string** |  | [optional] 
+**CompanyName** | Pointer to **string** | The name of the customer, visible on dashboards, invoices, and reports. | [optional] 
+**Currency** | Pointer to **string** | The currency with which this customer pays for plans. | [optional] 
+**StripeCustomerId** | Pointer to **string** | The customer&#39;s Stripe &#x60;customer_id&#x60;, if any, for automatic invoice processing through Stripe. | [optional] 
 
 ## Methods
 
@@ -50,6 +51,31 @@ SetCompanyName sets CompanyName field to given value.
 `func (o *UpdateCustomerRequest) HasCompanyName() bool`
 
 HasCompanyName returns a boolean if a field has been set.
+
+### GetCurrency
+
+`func (o *UpdateCustomerRequest) GetCurrency() string`
+
+GetCurrency returns the Currency field if non-nil, zero value otherwise.
+
+### GetCurrencyOk
+
+`func (o *UpdateCustomerRequest) GetCurrencyOk() (*string, bool)`
+
+GetCurrencyOk returns a tuple with the Currency field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCurrency
+
+`func (o *UpdateCustomerRequest) SetCurrency(v string)`
+
+SetCurrency sets Currency field to given value.
+
+### HasCurrency
+
+`func (o *UpdateCustomerRequest) HasCurrency() bool`
+
+HasCurrency returns a boolean if a field has been set.
 
 ### GetStripeCustomerId
 

@@ -17,10 +17,14 @@ import (
 
 // CreateCustomerRequest struct for CreateCustomerRequest
 type CreateCustomerRequest struct {
+	// A unique identifier for the customer, defined by you. This usually corresponds to your own internal unique identifier for customers, and is the identifier by which Kable attributes customer usage.
 	ClientId string `json:"clientId"`
+	// The name of the customer, visible on dashboards, invoices, and reports.
 	CompanyName string `json:"companyName"`
 	Currency *string `json:"currency,omitempty"`
+	// The customer's Stripe `customer_id`, if any, for automatic invoice processing through Stripe.
 	StripeCustomerId *string `json:"stripeCustomerId,omitempty"`
+	// A collection of plans to which this customer is currently subscribed.
 	PlanIds []string `json:"planIds,omitempty"`
 }
 

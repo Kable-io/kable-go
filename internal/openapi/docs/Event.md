@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **ClientId** | **string** | Your customer&#39;s client ID (as defined by you during customer creation). This is how Kable attributes events to a given customer. | 
 **Timestamp** | **time.Time** | When the event occurred. Timestamps must be formatted as RFC 3339 strings like &#x60;2022-01-09T09:32:01Z&#x60;. | 
+**TransactionId** | Pointer to **string** | A unique identifier for the event, used as an idempotency key for event deduplication. | [optional] 
 **Data** | Pointer to **map[string]interface{}** | &#x60;data&#x60; is a JSON-formatted object containing key-value pairs of information to be tracked by Kable. The keys provided in the &#x60;data&#x60; JSON correspond to the Dimensions you&#39;ve defined on Kable.  When using a Kable library, you must **always** include a &#x60;clientId&#x60; in the &#x60;record&#x60; payload so that Kable can accurately attribute events to your customers.  | [optional] 
 
 ## Methods
@@ -66,6 +67,31 @@ and a boolean to check if the value has been set.
 
 SetTimestamp sets Timestamp field to given value.
 
+
+### GetTransactionId
+
+`func (o *Event) GetTransactionId() string`
+
+GetTransactionId returns the TransactionId field if non-nil, zero value otherwise.
+
+### GetTransactionIdOk
+
+`func (o *Event) GetTransactionIdOk() (*string, bool)`
+
+GetTransactionIdOk returns a tuple with the TransactionId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetTransactionId
+
+`func (o *Event) SetTransactionId(v string)`
+
+SetTransactionId sets TransactionId field to given value.
+
+### HasTransactionId
+
+`func (o *Event) HasTransactionId() bool`
+
+HasTransactionId returns a boolean if a field has been set.
 
 ### GetData
 

@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **DimensionKey** | Pointer to **string** | Note that one of either &#x60;dimensionId&#x60; or &#x60;dimensionKey&#x60; is required, though either may be provided. | [optional] 
 **StartDate** | **time.Time** | Start of the period over which to query. Timestamps must be formatted as RFC 3339 strings like &#x60;2022-01-09T09:32:01Z&#x60; | 
 **EndDate** | **time.Time** | End of the period over which to query. Timestamps must be formatted as RFC 3339 strings like &#x60;2022-01-09T09:32:01Z&#x60; | 
-**Interval** | **string** | Valid values are &#x60;HOUR&#x60;, &#x60;DAY&#x60;, and &#x60;MONTH&#x60;. | 
+**Interval** | **string** | Timeseries unit duration over which to return intervals. | 
 **ClientId** | Pointer to **string** | When provided, query will consider only this customer. When &#x60;null&#x60;, query will consider all of your customers. | [optional] 
 
 ## Methods

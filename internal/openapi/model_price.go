@@ -15,138 +15,124 @@ import (
 	"encoding/json"
 )
 
-// AddCustomerPlansRequest struct for AddCustomerPlansRequest
-type AddCustomerPlansRequest struct {
-	// The identifier for a single plan.
-	PlanId *string `json:"planId,omitempty"`
-	// The identifiers for many plans.
-	PlanIds []string `json:"planIds,omitempty"`
+// Price struct for Price
+type Price struct {
+	// Three-letter currency code.
+	Currency string `json:"currency"`
+	// Price tiers that define price for usage-based plans. Subscription plans will always have prices with a single tier.
+	Tiers []PriceTier `json:"tiers"`
 }
 
-// NewAddCustomerPlansRequest instantiates a new AddCustomerPlansRequest object
+// NewPrice instantiates a new Price object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAddCustomerPlansRequest() *AddCustomerPlansRequest {
-	this := AddCustomerPlansRequest{}
+func NewPrice(currency string, tiers []PriceTier) *Price {
+	this := Price{}
+	this.Currency = currency
+	this.Tiers = tiers
 	return &this
 }
 
-// NewAddCustomerPlansRequestWithDefaults instantiates a new AddCustomerPlansRequest object
+// NewPriceWithDefaults instantiates a new Price object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewAddCustomerPlansRequestWithDefaults() *AddCustomerPlansRequest {
-	this := AddCustomerPlansRequest{}
+func NewPriceWithDefaults() *Price {
+	this := Price{}
 	return &this
 }
 
-// GetPlanId returns the PlanId field value if set, zero value otherwise.
-func (o *AddCustomerPlansRequest) GetPlanId() string {
-	if o == nil || o.PlanId == nil {
+// GetCurrency returns the Currency field value
+func (o *Price) GetCurrency() string {
+	if o == nil {
 		var ret string
 		return ret
 	}
-	return *o.PlanId
+
+	return o.Currency
 }
 
-// GetPlanIdOk returns a tuple with the PlanId field value if set, nil otherwise
+// GetCurrencyOk returns a tuple with the Currency field value
 // and a boolean to check if the value has been set.
-func (o *AddCustomerPlansRequest) GetPlanIdOk() (*string, bool) {
-	if o == nil || o.PlanId == nil {
+func (o *Price) GetCurrencyOk() (*string, bool) {
+	if o == nil {
 		return nil, false
 	}
-	return o.PlanId, true
+	return &o.Currency, true
 }
 
-// HasPlanId returns a boolean if a field has been set.
-func (o *AddCustomerPlansRequest) HasPlanId() bool {
-	if o != nil && o.PlanId != nil {
-		return true
-	}
-
-	return false
+// SetCurrency sets field value
+func (o *Price) SetCurrency(v string) {
+	o.Currency = v
 }
 
-// SetPlanId gets a reference to the given string and assigns it to the PlanId field.
-func (o *AddCustomerPlansRequest) SetPlanId(v string) {
-	o.PlanId = &v
-}
-
-// GetPlanIds returns the PlanIds field value if set, zero value otherwise.
-func (o *AddCustomerPlansRequest) GetPlanIds() []string {
-	if o == nil || o.PlanIds == nil {
-		var ret []string
+// GetTiers returns the Tiers field value
+func (o *Price) GetTiers() []PriceTier {
+	if o == nil {
+		var ret []PriceTier
 		return ret
 	}
-	return o.PlanIds
+
+	return o.Tiers
 }
 
-// GetPlanIdsOk returns a tuple with the PlanIds field value if set, nil otherwise
+// GetTiersOk returns a tuple with the Tiers field value
 // and a boolean to check if the value has been set.
-func (o *AddCustomerPlansRequest) GetPlanIdsOk() ([]string, bool) {
-	if o == nil || o.PlanIds == nil {
+func (o *Price) GetTiersOk() ([]PriceTier, bool) {
+	if o == nil {
 		return nil, false
 	}
-	return o.PlanIds, true
+	return o.Tiers, true
 }
 
-// HasPlanIds returns a boolean if a field has been set.
-func (o *AddCustomerPlansRequest) HasPlanIds() bool {
-	if o != nil && o.PlanIds != nil {
-		return true
-	}
-
-	return false
+// SetTiers sets field value
+func (o *Price) SetTiers(v []PriceTier) {
+	o.Tiers = v
 }
 
-// SetPlanIds gets a reference to the given []string and assigns it to the PlanIds field.
-func (o *AddCustomerPlansRequest) SetPlanIds(v []string) {
-	o.PlanIds = v
-}
-
-func (o AddCustomerPlansRequest) MarshalJSON() ([]byte, error) {
+func (o Price) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.PlanId != nil {
-		toSerialize["planId"] = o.PlanId
+	if true {
+		toSerialize["currency"] = o.Currency
 	}
-	if o.PlanIds != nil {
-		toSerialize["planIds"] = o.PlanIds
+	if true {
+		toSerialize["tiers"] = o.Tiers
 	}
 	return json.Marshal(toSerialize)
 }
 
-type NullableAddCustomerPlansRequest struct {
-	value *AddCustomerPlansRequest
+type NullablePrice struct {
+	value *Price
 	isSet bool
 }
 
-func (v NullableAddCustomerPlansRequest) Get() *AddCustomerPlansRequest {
+func (v NullablePrice) Get() *Price {
 	return v.value
 }
 
-func (v *NullableAddCustomerPlansRequest) Set(val *AddCustomerPlansRequest) {
+func (v *NullablePrice) Set(val *Price) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableAddCustomerPlansRequest) IsSet() bool {
+func (v NullablePrice) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableAddCustomerPlansRequest) Unset() {
+func (v *NullablePrice) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableAddCustomerPlansRequest(val *AddCustomerPlansRequest) *NullableAddCustomerPlansRequest {
-	return &NullableAddCustomerPlansRequest{value: val, isSet: true}
+func NewNullablePrice(val *Price) *NullablePrice {
+	return &NullablePrice{value: val, isSet: true}
 }
 
-func (v NullableAddCustomerPlansRequest) MarshalJSON() ([]byte, error) {
+func (v NullablePrice) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableAddCustomerPlansRequest) UnmarshalJSON(src []byte) error {
+func (v *NullablePrice) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
