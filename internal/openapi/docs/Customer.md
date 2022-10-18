@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **CustomerId** | **string** | A Kable-defined identifier for the customer. | 
 **ClientId** | **string** | A unique identifier for the customer, defined by you. This usually corresponds to your own internal unique identifier for customers, and is the identifier by which Kable attributes customer usage. | 
 **CompanyName** | **string** | The name of the customer, visible on dashboards, invoices, and reports. | 
-**Currency** | **string** | The currency with which this customer pays for plans. | 
+**Currency** | **string** | The three-letter currency code with which this customer pays for plans. | 
 **Status** | **string** | The current status of the customer. | 
 **NextInvoiceDate** | Pointer to **string** | The date of the customer&#39;s next invoice, if any. | [optional] 
 **StripeCustomerId** | Pointer to **string** | The customer&#39;s Stripe &#x60;customer_id&#x60;, if any, for automatic invoice processing through Stripe. | [optional] 

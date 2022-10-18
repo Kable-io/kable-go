@@ -4,11 +4,11 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**ClientId** | **string** |  | 
-**CompanyName** | **string** |  | 
+**ClientId** | **string** | A unique identifier for the customer, defined by you. This usually corresponds to your own internal unique identifier for customers, and is the identifier by which Kable attributes customer usage. | 
+**CompanyName** | **string** | The name of the customer, visible on dashboards, invoices, and reports. | 
 **Currency** | Pointer to **string** |  | [optional] 
-**StripeCustomerId** | Pointer to **string** |  | [optional] 
-**PlanIds** | Pointer to **[]string** |  | [optional] 
+**StripeCustomerId** | Pointer to **string** | The customer&#39;s Stripe &#x60;customer_id&#x60;, if any, for automatic invoice processing through Stripe. | [optional] 
+**PlanIds** | Pointer to **[]string** | A collection of plans to which this customer is currently subscribed. | [optional] 
 
 ## Methods
 

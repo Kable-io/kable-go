@@ -1,11 +1,12 @@
 package kable_test
 
 import (
-	"github.com/joho/godotenv"
 	"log"
 	"os"
 	"testing"
 	"time"
+
+	"github.com/joho/godotenv"
 
 	"github.com/Kable-io/kable-go"
 )

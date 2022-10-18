@@ -28,7 +28,7 @@ type GetUsageRequest struct {
 	StartDate time.Time `json:"startDate"`
 	// End of the period over which to query. Timestamps must be formatted as RFC 3339 strings like `2022-01-09T09:32:01Z`
 	EndDate time.Time `json:"endDate"`
-	// Valid values are `HOUR`, `DAY`, and `MONTH`.
+	// Timeseries unit duration over which to return intervals.
 	Interval string `json:"interval"`
 	// When provided, query will consider only this customer. When `null`, query will consider all of your customers.
 	ClientId *string `json:"clientId,omitempty"`

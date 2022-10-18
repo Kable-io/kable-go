@@ -22,6 +22,8 @@ type Event struct {
 	ClientId string `json:"clientId"`
 	// When the event occurred. Timestamps must be formatted as RFC 3339 strings like `2022-01-09T09:32:01Z`.
 	Timestamp time.Time `json:"timestamp"`
+	// A unique identifier for the event, used as an idempotency key for event deduplication.
+	TransactionId *string `json:"transactionId,omitempty"`
 	// `data` is a JSON-formatted object containing key-value pairs of information to be tracked by Kable. The keys provided in the `data` JSON correspond to the Dimensions you've defined on Kable.  When using a Kable library, you must **always** include a `clientId` in the `record` payload so that Kable can accurately attribute events to your customers. 
 	Data map[string]interface{} `json:"data,omitempty"`
 }
@@ -93,6 +95,38 @@ func (o *Event) SetTimestamp(v time.Time) {
 	o.Timestamp = v
 }
 
+// GetTransactionId returns the TransactionId field value if set, zero value otherwise.
+func (o *Event) GetTransactionId() string {
+	if o == nil || o.TransactionId == nil {
+		var ret string
+		return ret
+	}
+	return *o.TransactionId
+}
+
+// GetTransactionIdOk returns a tuple with the TransactionId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Event) GetTransactionIdOk() (*string, bool) {
+	if o == nil || o.TransactionId == nil {
+		return nil, false
+	}
+	return o.TransactionId, true
+}
+
+// HasTransactionId returns a boolean if a field has been set.
+func (o *Event) HasTransactionId() bool {
+	if o != nil && o.TransactionId != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTransactionId gets a reference to the given string and assigns it to the TransactionId field.
+func (o *Event) SetTransactionId(v string) {
+	o.TransactionId = &v
+}
+
 // GetData returns the Data field value if set, zero value otherwise.
 func (o *Event) GetData() map[string]interface{} {
 	if o == nil || o.Data == nil {
@@ -132,6 +166,9 @@ func (o Event) MarshalJSON() ([]byte, error) {
 	}
 	if true {
 		toSerialize["timestamp"] = o.Timestamp
+	}
+	if o.TransactionId != nil {
+		toSerialize["transactionId"] = o.TransactionId
 	}
 	if o.Data != nil {
 		toSerialize["data"] = o.Data

@@ -117,21 +117,28 @@ All URIs are relative to *https://live.kable.io/api/v1*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*CreditGrantsApi* | [**CreateCreditGrant**](docs/CreditGrantsApi.md#createcreditgrant) | **Post** /customers/{customerId}/credits/create | create a new credit grant for a customer
+*CreditGrantsApi* | [**GetCustomerCreditBalance**](docs/CreditGrantsApi.md#getcustomercreditbalance) | **Get** /customers/{customerId}/credits/balance | get a customer&#39;s credit balance
 *CustomersApi* | [**AddCustomerPaymentMethod**](docs/CustomersApi.md#addcustomerpaymentmethod) | **Post** /customers/{customerId}/payment_methods/add | add a customer payment method
 *CustomersApi* | [**AddCustomerPlans**](docs/CustomersApi.md#addcustomerplans) | **Post** /customers/{customerId}/plans/add | add a plan(s) to a customer
 *CustomersApi* | [**CancelCustomer**](docs/CustomersApi.md#cancelcustomer) | **Post** /customers/{customerId}/cancel | cancel a customer
 *CustomersApi* | [**CreateCustomer**](docs/CustomersApi.md#createcustomer) | **Post** /customers/create | create a customer
+*CustomersApi* | [**DeleteCustomer**](docs/CustomersApi.md#deletecustomer) | **Post** /customers/{customerId}/delete | delete a customer
 *CustomersApi* | [**GetAllCustomers**](docs/CustomersApi.md#getallcustomers) | **Get** /customers | get all customers
 *CustomersApi* | [**GetCustomer**](docs/CustomersApi.md#getcustomer) | **Get** /customers/{customerId} | get customer
 *CustomersApi* | [**RemoveCustomerPlans**](docs/CustomersApi.md#removecustomerplans) | **Post** /customers/{customerId}/plans/remove | remove a plan(s) from a customer
 *CustomersApi* | [**UpdateCustomer**](docs/CustomersApi.md#updatecustomer) | **Post** /customers/{customerId}/update | update a customer
+*DimensionsApi* | [**CreateDimension**](docs/DimensionsApi.md#createdimension) | **Post** /dimensions/create | create a dimension
+*DimensionsApi* | [**DeleteDimension**](docs/DimensionsApi.md#deletedimension) | **Post** /dimensions/{dimensionId}/delete | delete a dimension
 *DimensionsApi* | [**GetAllDimensions**](docs/DimensionsApi.md#getalldimensions) | **Get** /dimensions | get all dimensions
 *DimensionsApi* | [**GetDimension**](docs/DimensionsApi.md#getdimension) | **Get** /dimensions/{dimensionId} | get dimension
+*DimensionsApi* | [**UpdateDimension**](docs/DimensionsApi.md#updatedimension) | **Post** /dimensions/{dimensionId}/update | update a dimension
 *EventsApi* | [**CreateEvents**](docs/EventsApi.md#createevents) | **Post** /events/create | record events
-*KeysApi* | [**CreateKey**](docs/KeysApi.md#createkey) | **Post** /keys/create | create a customer API key
-*KeysApi* | [**RevokeKey**](docs/KeysApi.md#revokekey) | **Post** /keys/revoke | revoke a customer API key(s)
+*PlansApi* | [**CreatePlan**](docs/PlansApi.md#createplan) | **Post** /plans/create | create a plan
+*PlansApi* | [**DeletePlan**](docs/PlansApi.md#deleteplan) | **Post** /plans/{planId}/delete | delete a plan
 *PlansApi* | [**GetAllPlans**](docs/PlansApi.md#getallplans) | **Get** /plans | get all plans
 *PlansApi* | [**GetPlan**](docs/PlansApi.md#getplan) | **Get** /plans/{planId} | get plan
+*PlansApi* | [**UpdatePlan**](docs/PlansApi.md#updateplan) | **Post** /plans/{planId}/update | update a plan
 *TokensApi* | [**CreateToken**](docs/TokensApi.md#createtoken) | **Post** /tokens/create | create a token
 *UsageApi* | [**GetUsage**](docs/UsageApi.md#getusage) | **Post** /usage/get | get usage metrics
 
@@ -141,21 +148,27 @@ Class | Method | HTTP request | Description
  - [AddCustomerPaymentMethod200Response](docs/AddCustomerPaymentMethod200Response.md)
  - [AddCustomerPaymentMethodRequest](docs/AddCustomerPaymentMethodRequest.md)
  - [AddCustomerPlansRequest](docs/AddCustomerPlansRequest.md)
+ - [CreateCreditGrantRequest](docs/CreateCreditGrantRequest.md)
  - [CreateCustomer200Response](docs/CreateCustomer200Response.md)
  - [CreateCustomerRequest](docs/CreateCustomerRequest.md)
- - [CreateKey200Response](docs/CreateKey200Response.md)
- - [CreateKeyRequest](docs/CreateKeyRequest.md)
+ - [CreateDimensionRequest](docs/CreateDimensionRequest.md)
+ - [CreatePlanRequest](docs/CreatePlanRequest.md)
  - [CreateToken200Response](docs/CreateToken200Response.md)
  - [CreateTokenRequest](docs/CreateTokenRequest.md)
+ - [CreditGrant](docs/CreditGrant.md)
  - [Customer](docs/Customer.md)
  - [CustomerPlan](docs/CustomerPlan.md)
  - [Dimension](docs/Dimension.md)
  - [Event](docs/Event.md)
+ - [GetCustomerCreditBalance200Response](docs/GetCustomerCreditBalance200Response.md)
  - [GetUsageRequest](docs/GetUsageRequest.md)
  - [Key](docs/Key.md)
  - [Plan](docs/Plan.md)
- - [RevokeKeyRequest](docs/RevokeKeyRequest.md)
+ - [Price](docs/Price.md)
+ - [PriceTier](docs/PriceTier.md)
  - [UpdateCustomerRequest](docs/UpdateCustomerRequest.md)
+ - [UpdateDimensionRequest](docs/UpdateDimensionRequest.md)
+ - [UpdatePlanRequest](docs/UpdatePlanRequest.md)
  - [UsageMetricInterval](docs/UsageMetricInterval.md)
  - [UsageMetricResponse](docs/UsageMetricResponse.md)
 

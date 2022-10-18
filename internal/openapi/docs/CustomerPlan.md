@@ -5,10 +5,11 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **PlanId** | **string** | A Kable-defined identifier for the plan. | 
-**DimensionId** | **string** | An identifier of the dimension along which usage is aggregated in this plan. | 
 **Name** | **string** | A human-readable name for the plan, visible on dashboards, invoices, and reports. | 
+**ExternalId** | Pointer to **string** | An identifier for the plan as defined by your API. | [optional] 
 **Description** | Pointer to **string** | A human-readable description for the plan, visible on dashboards, invoices, and reports. | [optional] 
 **Nickname** | Pointer to **string** | An additional identifier for the plan, defined by you, that is *not* visible to customers. If you have different *Monthly Active Users Plan*s for different cohorts of customers, this is a useful place to differentiate those. | [optional] 
+**DimensionId** | **string** | An identifier of the dimension along which usage is aggregated in this plan. | 
 **AddedDate** | **string** | Date the plan was added to the customer. | 
 **EndedDate** | Pointer to **string** | Date the plan ended or will end for trials or pilot programs. | [optional] 
 **PeriodStartDate** | Pointer to **string** | Date the current invoice cycle begins. | [optional] 
@@ -19,7 +20,7 @@ Name | Type | Description | Notes
 
 ### NewCustomerPlan
 
-`func NewCustomerPlan(planId string, dimensionId string, name string, addedDate string, ) *CustomerPlan`
+`func NewCustomerPlan(planId string, name string, dimensionId string, addedDate string, ) *CustomerPlan`
 
 NewCustomerPlan instantiates a new CustomerPlan object
 This constructor will assign default values to properties that have it defined,
@@ -54,26 +55,6 @@ and a boolean to check if the value has been set.
 SetPlanId sets PlanId field to given value.
 
 
-### GetDimensionId
-
-`func (o *CustomerPlan) GetDimensionId() string`
-
-GetDimensionId returns the DimensionId field if non-nil, zero value otherwise.
-
-### GetDimensionIdOk
-
-`func (o *CustomerPlan) GetDimensionIdOk() (*string, bool)`
-
-GetDimensionIdOk returns a tuple with the DimensionId field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetDimensionId
-
-`func (o *CustomerPlan) SetDimensionId(v string)`
-
-SetDimensionId sets DimensionId field to given value.
-
-
 ### GetName
 
 `func (o *CustomerPlan) GetName() string`
@@ -93,6 +74,31 @@ and a boolean to check if the value has been set.
 
 SetName sets Name field to given value.
 
+
+### GetExternalId
+
+`func (o *CustomerPlan) GetExternalId() string`
+
+GetExternalId returns the ExternalId field if non-nil, zero value otherwise.
+
+### GetExternalIdOk
+
+`func (o *CustomerPlan) GetExternalIdOk() (*string, bool)`
+
+GetExternalIdOk returns a tuple with the ExternalId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetExternalId
+
+`func (o *CustomerPlan) SetExternalId(v string)`
+
+SetExternalId sets ExternalId field to given value.
+
+### HasExternalId
+
+`func (o *CustomerPlan) HasExternalId() bool`
+
+HasExternalId returns a boolean if a field has been set.
 
 ### GetDescription
 
@@ -143,6 +149,26 @@ SetNickname sets Nickname field to given value.
 `func (o *CustomerPlan) HasNickname() bool`
 
 HasNickname returns a boolean if a field has been set.
+
+### GetDimensionId
+
+`func (o *CustomerPlan) GetDimensionId() string`
+
+GetDimensionId returns the DimensionId field if non-nil, zero value otherwise.
+
+### GetDimensionIdOk
+
+`func (o *CustomerPlan) GetDimensionIdOk() (*string, bool)`
+
+GetDimensionIdOk returns a tuple with the DimensionId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDimensionId
+
+`func (o *CustomerPlan) SetDimensionId(v string)`
+
+SetDimensionId sets DimensionId field to given value.
+
 
 ### GetAddedDate
 

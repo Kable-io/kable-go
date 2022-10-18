@@ -15,10 +15,8 @@ import (
 	"encoding/json"
 )
 
-// CustomerPlan struct for CustomerPlan
-type CustomerPlan struct {
-	// A Kable-defined identifier for the plan.
-	PlanId string `json:"planId"`
+// CreatePlanRequest struct for CreatePlanRequest
+type CreatePlanRequest struct {
 	// A human-readable name for the plan, visible on dashboards, invoices, and reports.
 	Name string `json:"name"`
 	// An identifier for the plan as defined by your API.
@@ -27,67 +25,42 @@ type CustomerPlan struct {
 	Description *string `json:"description,omitempty"`
 	// An additional identifier for the plan, defined by you, that is *not* visible to customers. If you have different *Monthly Active Users Plan*s for different cohorts of customers, this is a useful place to differentiate those.
 	Nickname *string `json:"nickname,omitempty"`
+	// The type of plan.
+	Type string `json:"type"`
+	// The billing interval for the plan.
+	Interval string `json:"interval"`
 	// An identifier of the dimension along which usage is aggregated in this plan.
-	DimensionId string `json:"dimensionId"`
-	// Date the plan was added to the customer.
-	AddedDate string `json:"addedDate"`
-	// Date the plan ended or will end for trials or pilot programs.
-	EndedDate *string `json:"endedDate,omitempty"`
-	// Date the current invoice cycle begins.
-	PeriodStartDate *string `json:"periodStartDate,omitempty"`
-	// Date the current invoice cycle ends.
-	PeriodEndDate *string `json:"periodEndDate,omitempty"`
-	// An optional identifier of any \"next\" plan after the termination of a free trials or pilot programs.
-	NextPlanId *string `json:"nextPlanId,omitempty"`
+	DimensionId *string `json:"dimensionId,omitempty"`
+	// The aggregation along which usage metrics are calculated in this plan, relevant only for usage plans.
+	Aggregation *string `json:"aggregation,omitempty"`
+	Price Price `json:"price"`
+	// Arbitrary key-value pairs to attach to the object that can be useful for controlling functionality inside your API.
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 }
 
-// NewCustomerPlan instantiates a new CustomerPlan object
+// NewCreatePlanRequest instantiates a new CreatePlanRequest object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCustomerPlan(planId string, name string, dimensionId string, addedDate string) *CustomerPlan {
-	this := CustomerPlan{}
-	this.PlanId = planId
+func NewCreatePlanRequest(name string, type_ string, interval string, price Price) *CreatePlanRequest {
+	this := CreatePlanRequest{}
 	this.Name = name
-	this.DimensionId = dimensionId
-	this.AddedDate = addedDate
+	this.Type = type_
+	this.Interval = interval
+	this.Price = price
 	return &this
 }
 
-// NewCustomerPlanWithDefaults instantiates a new CustomerPlan object
+// NewCreatePlanRequestWithDefaults instantiates a new CreatePlanRequest object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewCustomerPlanWithDefaults() *CustomerPlan {
-	this := CustomerPlan{}
+func NewCreatePlanRequestWithDefaults() *CreatePlanRequest {
+	this := CreatePlanRequest{}
 	return &this
-}
-
-// GetPlanId returns the PlanId field value
-func (o *CustomerPlan) GetPlanId() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.PlanId
-}
-
-// GetPlanIdOk returns a tuple with the PlanId field value
-// and a boolean to check if the value has been set.
-func (o *CustomerPlan) GetPlanIdOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.PlanId, true
-}
-
-// SetPlanId sets field value
-func (o *CustomerPlan) SetPlanId(v string) {
-	o.PlanId = v
 }
 
 // GetName returns the Name field value
-func (o *CustomerPlan) GetName() string {
+func (o *CreatePlanRequest) GetName() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -98,7 +71,7 @@ func (o *CustomerPlan) GetName() string {
 
 // GetNameOk returns a tuple with the Name field value
 // and a boolean to check if the value has been set.
-func (o *CustomerPlan) GetNameOk() (*string, bool) {
+func (o *CreatePlanRequest) GetNameOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -106,12 +79,12 @@ func (o *CustomerPlan) GetNameOk() (*string, bool) {
 }
 
 // SetName sets field value
-func (o *CustomerPlan) SetName(v string) {
+func (o *CreatePlanRequest) SetName(v string) {
 	o.Name = v
 }
 
 // GetExternalId returns the ExternalId field value if set, zero value otherwise.
-func (o *CustomerPlan) GetExternalId() string {
+func (o *CreatePlanRequest) GetExternalId() string {
 	if o == nil || o.ExternalId == nil {
 		var ret string
 		return ret
@@ -121,7 +94,7 @@ func (o *CustomerPlan) GetExternalId() string {
 
 // GetExternalIdOk returns a tuple with the ExternalId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *CustomerPlan) GetExternalIdOk() (*string, bool) {
+func (o *CreatePlanRequest) GetExternalIdOk() (*string, bool) {
 	if o == nil || o.ExternalId == nil {
 		return nil, false
 	}
@@ -129,7 +102,7 @@ func (o *CustomerPlan) GetExternalIdOk() (*string, bool) {
 }
 
 // HasExternalId returns a boolean if a field has been set.
-func (o *CustomerPlan) HasExternalId() bool {
+func (o *CreatePlanRequest) HasExternalId() bool {
 	if o != nil && o.ExternalId != nil {
 		return true
 	}
@@ -138,12 +111,12 @@ func (o *CustomerPlan) HasExternalId() bool {
 }
 
 // SetExternalId gets a reference to the given string and assigns it to the ExternalId field.
-func (o *CustomerPlan) SetExternalId(v string) {
+func (o *CreatePlanRequest) SetExternalId(v string) {
 	o.ExternalId = &v
 }
 
 // GetDescription returns the Description field value if set, zero value otherwise.
-func (o *CustomerPlan) GetDescription() string {
+func (o *CreatePlanRequest) GetDescription() string {
 	if o == nil || o.Description == nil {
 		var ret string
 		return ret
@@ -153,7 +126,7 @@ func (o *CustomerPlan) GetDescription() string {
 
 // GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *CustomerPlan) GetDescriptionOk() (*string, bool) {
+func (o *CreatePlanRequest) GetDescriptionOk() (*string, bool) {
 	if o == nil || o.Description == nil {
 		return nil, false
 	}
@@ -161,7 +134,7 @@ func (o *CustomerPlan) GetDescriptionOk() (*string, bool) {
 }
 
 // HasDescription returns a boolean if a field has been set.
-func (o *CustomerPlan) HasDescription() bool {
+func (o *CreatePlanRequest) HasDescription() bool {
 	if o != nil && o.Description != nil {
 		return true
 	}
@@ -170,12 +143,12 @@ func (o *CustomerPlan) HasDescription() bool {
 }
 
 // SetDescription gets a reference to the given string and assigns it to the Description field.
-func (o *CustomerPlan) SetDescription(v string) {
+func (o *CreatePlanRequest) SetDescription(v string) {
 	o.Description = &v
 }
 
 // GetNickname returns the Nickname field value if set, zero value otherwise.
-func (o *CustomerPlan) GetNickname() string {
+func (o *CreatePlanRequest) GetNickname() string {
 	if o == nil || o.Nickname == nil {
 		var ret string
 		return ret
@@ -185,7 +158,7 @@ func (o *CustomerPlan) GetNickname() string {
 
 // GetNicknameOk returns a tuple with the Nickname field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *CustomerPlan) GetNicknameOk() (*string, bool) {
+func (o *CreatePlanRequest) GetNicknameOk() (*string, bool) {
 	if o == nil || o.Nickname == nil {
 		return nil, false
 	}
@@ -193,7 +166,7 @@ func (o *CustomerPlan) GetNicknameOk() (*string, bool) {
 }
 
 // HasNickname returns a boolean if a field has been set.
-func (o *CustomerPlan) HasNickname() bool {
+func (o *CreatePlanRequest) HasNickname() bool {
 	if o != nil && o.Nickname != nil {
 		return true
 	}
@@ -202,191 +175,180 @@ func (o *CustomerPlan) HasNickname() bool {
 }
 
 // SetNickname gets a reference to the given string and assigns it to the Nickname field.
-func (o *CustomerPlan) SetNickname(v string) {
+func (o *CreatePlanRequest) SetNickname(v string) {
 	o.Nickname = &v
 }
 
-// GetDimensionId returns the DimensionId field value
-func (o *CustomerPlan) GetDimensionId() string {
+// GetType returns the Type field value
+func (o *CreatePlanRequest) GetType() string {
 	if o == nil {
 		var ret string
 		return ret
 	}
 
-	return o.DimensionId
+	return o.Type
 }
 
-// GetDimensionIdOk returns a tuple with the DimensionId field value
+// GetTypeOk returns a tuple with the Type field value
 // and a boolean to check if the value has been set.
-func (o *CustomerPlan) GetDimensionIdOk() (*string, bool) {
+func (o *CreatePlanRequest) GetTypeOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.DimensionId, true
+	return &o.Type, true
 }
 
-// SetDimensionId sets field value
-func (o *CustomerPlan) SetDimensionId(v string) {
-	o.DimensionId = v
+// SetType sets field value
+func (o *CreatePlanRequest) SetType(v string) {
+	o.Type = v
 }
 
-// GetAddedDate returns the AddedDate field value
-func (o *CustomerPlan) GetAddedDate() string {
+// GetInterval returns the Interval field value
+func (o *CreatePlanRequest) GetInterval() string {
 	if o == nil {
 		var ret string
 		return ret
 	}
 
-	return o.AddedDate
+	return o.Interval
 }
 
-// GetAddedDateOk returns a tuple with the AddedDate field value
+// GetIntervalOk returns a tuple with the Interval field value
 // and a boolean to check if the value has been set.
-func (o *CustomerPlan) GetAddedDateOk() (*string, bool) {
+func (o *CreatePlanRequest) GetIntervalOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.AddedDate, true
+	return &o.Interval, true
 }
 
-// SetAddedDate sets field value
-func (o *CustomerPlan) SetAddedDate(v string) {
-	o.AddedDate = v
+// SetInterval sets field value
+func (o *CreatePlanRequest) SetInterval(v string) {
+	o.Interval = v
 }
 
-// GetEndedDate returns the EndedDate field value if set, zero value otherwise.
-func (o *CustomerPlan) GetEndedDate() string {
-	if o == nil || o.EndedDate == nil {
+// GetDimensionId returns the DimensionId field value if set, zero value otherwise.
+func (o *CreatePlanRequest) GetDimensionId() string {
+	if o == nil || o.DimensionId == nil {
 		var ret string
 		return ret
 	}
-	return *o.EndedDate
+	return *o.DimensionId
 }
 
-// GetEndedDateOk returns a tuple with the EndedDate field value if set, nil otherwise
+// GetDimensionIdOk returns a tuple with the DimensionId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *CustomerPlan) GetEndedDateOk() (*string, bool) {
-	if o == nil || o.EndedDate == nil {
+func (o *CreatePlanRequest) GetDimensionIdOk() (*string, bool) {
+	if o == nil || o.DimensionId == nil {
 		return nil, false
 	}
-	return o.EndedDate, true
+	return o.DimensionId, true
 }
 
-// HasEndedDate returns a boolean if a field has been set.
-func (o *CustomerPlan) HasEndedDate() bool {
-	if o != nil && o.EndedDate != nil {
+// HasDimensionId returns a boolean if a field has been set.
+func (o *CreatePlanRequest) HasDimensionId() bool {
+	if o != nil && o.DimensionId != nil {
 		return true
 	}
 
 	return false
 }
 
-// SetEndedDate gets a reference to the given string and assigns it to the EndedDate field.
-func (o *CustomerPlan) SetEndedDate(v string) {
-	o.EndedDate = &v
+// SetDimensionId gets a reference to the given string and assigns it to the DimensionId field.
+func (o *CreatePlanRequest) SetDimensionId(v string) {
+	o.DimensionId = &v
 }
 
-// GetPeriodStartDate returns the PeriodStartDate field value if set, zero value otherwise.
-func (o *CustomerPlan) GetPeriodStartDate() string {
-	if o == nil || o.PeriodStartDate == nil {
+// GetAggregation returns the Aggregation field value if set, zero value otherwise.
+func (o *CreatePlanRequest) GetAggregation() string {
+	if o == nil || o.Aggregation == nil {
 		var ret string
 		return ret
 	}
-	return *o.PeriodStartDate
+	return *o.Aggregation
 }
 
-// GetPeriodStartDateOk returns a tuple with the PeriodStartDate field value if set, nil otherwise
+// GetAggregationOk returns a tuple with the Aggregation field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *CustomerPlan) GetPeriodStartDateOk() (*string, bool) {
-	if o == nil || o.PeriodStartDate == nil {
+func (o *CreatePlanRequest) GetAggregationOk() (*string, bool) {
+	if o == nil || o.Aggregation == nil {
 		return nil, false
 	}
-	return o.PeriodStartDate, true
+	return o.Aggregation, true
 }
 
-// HasPeriodStartDate returns a boolean if a field has been set.
-func (o *CustomerPlan) HasPeriodStartDate() bool {
-	if o != nil && o.PeriodStartDate != nil {
+// HasAggregation returns a boolean if a field has been set.
+func (o *CreatePlanRequest) HasAggregation() bool {
+	if o != nil && o.Aggregation != nil {
 		return true
 	}
 
 	return false
 }
 
-// SetPeriodStartDate gets a reference to the given string and assigns it to the PeriodStartDate field.
-func (o *CustomerPlan) SetPeriodStartDate(v string) {
-	o.PeriodStartDate = &v
+// SetAggregation gets a reference to the given string and assigns it to the Aggregation field.
+func (o *CreatePlanRequest) SetAggregation(v string) {
+	o.Aggregation = &v
 }
 
-// GetPeriodEndDate returns the PeriodEndDate field value if set, zero value otherwise.
-func (o *CustomerPlan) GetPeriodEndDate() string {
-	if o == nil || o.PeriodEndDate == nil {
-		var ret string
+// GetPrice returns the Price field value
+func (o *CreatePlanRequest) GetPrice() Price {
+	if o == nil {
+		var ret Price
 		return ret
 	}
-	return *o.PeriodEndDate
+
+	return o.Price
 }
 
-// GetPeriodEndDateOk returns a tuple with the PeriodEndDate field value if set, nil otherwise
+// GetPriceOk returns a tuple with the Price field value
 // and a boolean to check if the value has been set.
-func (o *CustomerPlan) GetPeriodEndDateOk() (*string, bool) {
-	if o == nil || o.PeriodEndDate == nil {
+func (o *CreatePlanRequest) GetPriceOk() (*Price, bool) {
+	if o == nil {
 		return nil, false
 	}
-	return o.PeriodEndDate, true
+	return &o.Price, true
 }
 
-// HasPeriodEndDate returns a boolean if a field has been set.
-func (o *CustomerPlan) HasPeriodEndDate() bool {
-	if o != nil && o.PeriodEndDate != nil {
+// SetPrice sets field value
+func (o *CreatePlanRequest) SetPrice(v Price) {
+	o.Price = v
+}
+
+// GetMetadata returns the Metadata field value if set, zero value otherwise.
+func (o *CreatePlanRequest) GetMetadata() map[string]interface{} {
+	if o == nil || o.Metadata == nil {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.Metadata
+}
+
+// GetMetadataOk returns a tuple with the Metadata field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreatePlanRequest) GetMetadataOk() (map[string]interface{}, bool) {
+	if o == nil || o.Metadata == nil {
+		return nil, false
+	}
+	return o.Metadata, true
+}
+
+// HasMetadata returns a boolean if a field has been set.
+func (o *CreatePlanRequest) HasMetadata() bool {
+	if o != nil && o.Metadata != nil {
 		return true
 	}
 
 	return false
 }
 
-// SetPeriodEndDate gets a reference to the given string and assigns it to the PeriodEndDate field.
-func (o *CustomerPlan) SetPeriodEndDate(v string) {
-	o.PeriodEndDate = &v
+// SetMetadata gets a reference to the given map[string]interface{} and assigns it to the Metadata field.
+func (o *CreatePlanRequest) SetMetadata(v map[string]interface{}) {
+	o.Metadata = v
 }
 
-// GetNextPlanId returns the NextPlanId field value if set, zero value otherwise.
-func (o *CustomerPlan) GetNextPlanId() string {
-	if o == nil || o.NextPlanId == nil {
-		var ret string
-		return ret
-	}
-	return *o.NextPlanId
-}
-
-// GetNextPlanIdOk returns a tuple with the NextPlanId field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *CustomerPlan) GetNextPlanIdOk() (*string, bool) {
-	if o == nil || o.NextPlanId == nil {
-		return nil, false
-	}
-	return o.NextPlanId, true
-}
-
-// HasNextPlanId returns a boolean if a field has been set.
-func (o *CustomerPlan) HasNextPlanId() bool {
-	if o != nil && o.NextPlanId != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetNextPlanId gets a reference to the given string and assigns it to the NextPlanId field.
-func (o *CustomerPlan) SetNextPlanId(v string) {
-	o.NextPlanId = &v
-}
-
-func (o CustomerPlan) MarshalJSON() ([]byte, error) {
+func (o CreatePlanRequest) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["planId"] = o.PlanId
-	}
 	if true {
 		toSerialize["name"] = o.Name
 	}
@@ -400,58 +362,58 @@ func (o CustomerPlan) MarshalJSON() ([]byte, error) {
 		toSerialize["nickname"] = o.Nickname
 	}
 	if true {
-		toSerialize["dimensionId"] = o.DimensionId
+		toSerialize["type"] = o.Type
 	}
 	if true {
-		toSerialize["addedDate"] = o.AddedDate
+		toSerialize["interval"] = o.Interval
 	}
-	if o.EndedDate != nil {
-		toSerialize["endedDate"] = o.EndedDate
+	if o.DimensionId != nil {
+		toSerialize["dimensionId"] = o.DimensionId
 	}
-	if o.PeriodStartDate != nil {
-		toSerialize["periodStartDate"] = o.PeriodStartDate
+	if o.Aggregation != nil {
+		toSerialize["aggregation"] = o.Aggregation
 	}
-	if o.PeriodEndDate != nil {
-		toSerialize["periodEndDate"] = o.PeriodEndDate
+	if true {
+		toSerialize["price"] = o.Price
 	}
-	if o.NextPlanId != nil {
-		toSerialize["nextPlanId"] = o.NextPlanId
+	if o.Metadata != nil {
+		toSerialize["metadata"] = o.Metadata
 	}
 	return json.Marshal(toSerialize)
 }
 
-type NullableCustomerPlan struct {
-	value *CustomerPlan
+type NullableCreatePlanRequest struct {
+	value *CreatePlanRequest
 	isSet bool
 }
 
-func (v NullableCustomerPlan) Get() *CustomerPlan {
+func (v NullableCreatePlanRequest) Get() *CreatePlanRequest {
 	return v.value
 }
 
-func (v *NullableCustomerPlan) Set(val *CustomerPlan) {
+func (v *NullableCreatePlanRequest) Set(val *CreatePlanRequest) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableCustomerPlan) IsSet() bool {
+func (v NullableCreatePlanRequest) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableCustomerPlan) Unset() {
+func (v *NullableCreatePlanRequest) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableCustomerPlan(val *CustomerPlan) *NullableCustomerPlan {
-	return &NullableCustomerPlan{value: val, isSet: true}
+func NewNullableCreatePlanRequest(val *CreatePlanRequest) *NullableCreatePlanRequest {
+	return &NullableCreatePlanRequest{value: val, isSet: true}
 }
 
-func (v NullableCustomerPlan) MarshalJSON() ([]byte, error) {
+func (v NullableCreatePlanRequest) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableCustomerPlan) UnmarshalJSON(src []byte) error {
+func (v *NullableCreatePlanRequest) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

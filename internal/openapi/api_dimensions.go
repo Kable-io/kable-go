@@ -24,6 +24,254 @@ import (
 // DimensionsApiService DimensionsApi service
 type DimensionsApiService service
 
+type ApiCreateDimensionRequest struct {
+	ctx context.Context
+	ApiService *DimensionsApiService
+	kableClientId *string
+	kableClientSecret *string
+	createDimensionRequest *CreateDimensionRequest
+}
+
+// Your client ID, found in the dashboard of your Kable account.
+func (r ApiCreateDimensionRequest) KableClientId(kableClientId string) ApiCreateDimensionRequest {
+	r.kableClientId = &kableClientId
+	return r
+}
+
+// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments of your API.
+func (r ApiCreateDimensionRequest) KableClientSecret(kableClientSecret string) ApiCreateDimensionRequest {
+	r.kableClientSecret = &kableClientSecret
+	return r
+}
+
+// Information about the dimension to create.
+func (r ApiCreateDimensionRequest) CreateDimensionRequest(createDimensionRequest CreateDimensionRequest) ApiCreateDimensionRequest {
+	r.createDimensionRequest = &createDimensionRequest
+	return r
+}
+
+func (r ApiCreateDimensionRequest) Execute() (*Dimension, *http.Response, error) {
+	return r.ApiService.CreateDimensionExecute(r)
+}
+
+/*
+CreateDimension create a dimension
+
+Create a dimension.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @return ApiCreateDimensionRequest
+*/
+func (a *DimensionsApiService) CreateDimension(ctx context.Context) ApiCreateDimensionRequest {
+	return ApiCreateDimensionRequest{
+		ApiService: a,
+		ctx: ctx,
+	}
+}
+
+// Execute executes the request
+//  @return Dimension
+func (a *DimensionsApiService) CreateDimensionExecute(r ApiCreateDimensionRequest) (*Dimension, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *Dimension
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DimensionsApiService.CreateDimension")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/dimensions/create"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.kableClientId == nil {
+		return localVarReturnValue, nil, reportError("kableClientId is required and must be specified")
+	}
+	if r.kableClientSecret == nil {
+		return localVarReturnValue, nil, reportError("kableClientSecret is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
+	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
+	// body params
+	localVarPostBody = r.createDimensionRequest
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiDeleteDimensionRequest struct {
+	ctx context.Context
+	ApiService *DimensionsApiService
+	kableClientId *string
+	kableClientSecret *string
+	dimensionId string
+}
+
+// Your client ID, found in the dashboard of your Kable account.
+func (r ApiDeleteDimensionRequest) KableClientId(kableClientId string) ApiDeleteDimensionRequest {
+	r.kableClientId = &kableClientId
+	return r
+}
+
+// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments of your API.
+func (r ApiDeleteDimensionRequest) KableClientSecret(kableClientSecret string) ApiDeleteDimensionRequest {
+	r.kableClientSecret = &kableClientSecret
+	return r
+}
+
+func (r ApiDeleteDimensionRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteDimensionExecute(r)
+}
+
+/*
+DeleteDimension delete a dimension
+
+Delete a dimension.
+
+You cannot delete a dimension if it is in use by a plan.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param dimensionId The identifier for the dimension.
+ @return ApiDeleteDimensionRequest
+*/
+func (a *DimensionsApiService) DeleteDimension(ctx context.Context, dimensionId string) ApiDeleteDimensionRequest {
+	return ApiDeleteDimensionRequest{
+		ApiService: a,
+		ctx: ctx,
+		dimensionId: dimensionId,
+	}
+}
+
+// Execute executes the request
+func (a *DimensionsApiService) DeleteDimensionExecute(r ApiDeleteDimensionRequest) (*http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DimensionsApiService.DeleteDimension")
+	if err != nil {
+		return nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/dimensions/{dimensionId}/delete"
+	localVarPath = strings.Replace(localVarPath, "{"+"dimensionId"+"}", url.PathEscape(parameterToString(r.dimensionId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.kableClientId == nil {
+		return nil, reportError("kableClientId is required and must be specified")
+	}
+	if r.kableClientSecret == nil {
+		return nil, reportError("kableClientSecret is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
+	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
 type ApiGetAllDimensionsRequest struct {
 	ctx context.Context
 	ApiService *DimensionsApiService
@@ -235,6 +483,141 @@ func (a *DimensionsApiService) GetDimensionExecute(r ApiGetDimensionRequest) (*D
 	}
 	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
 	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiUpdateDimensionRequest struct {
+	ctx context.Context
+	ApiService *DimensionsApiService
+	kableClientId *string
+	kableClientSecret *string
+	dimensionId string
+	updateDimensionRequest *UpdateDimensionRequest
+}
+
+// Your client ID, found in the dashboard of your Kable account.
+func (r ApiUpdateDimensionRequest) KableClientId(kableClientId string) ApiUpdateDimensionRequest {
+	r.kableClientId = &kableClientId
+	return r
+}
+
+// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments of your API.
+func (r ApiUpdateDimensionRequest) KableClientSecret(kableClientSecret string) ApiUpdateDimensionRequest {
+	r.kableClientSecret = &kableClientSecret
+	return r
+}
+
+// Information about the dimension to update.
+func (r ApiUpdateDimensionRequest) UpdateDimensionRequest(updateDimensionRequest UpdateDimensionRequest) ApiUpdateDimensionRequest {
+	r.updateDimensionRequest = &updateDimensionRequest
+	return r
+}
+
+func (r ApiUpdateDimensionRequest) Execute() (*Dimension, *http.Response, error) {
+	return r.ApiService.UpdateDimensionExecute(r)
+}
+
+/*
+UpdateDimension update a dimension
+
+Update a dimension.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param dimensionId The identifier for the dimension.
+ @return ApiUpdateDimensionRequest
+*/
+func (a *DimensionsApiService) UpdateDimension(ctx context.Context, dimensionId string) ApiUpdateDimensionRequest {
+	return ApiUpdateDimensionRequest{
+		ApiService: a,
+		ctx: ctx,
+		dimensionId: dimensionId,
+	}
+}
+
+// Execute executes the request
+//  @return Dimension
+func (a *DimensionsApiService) UpdateDimensionExecute(r ApiUpdateDimensionRequest) (*Dimension, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *Dimension
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DimensionsApiService.UpdateDimension")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/dimensions/{dimensionId}/update"
+	localVarPath = strings.Replace(localVarPath, "{"+"dimensionId"+"}", url.PathEscape(parameterToString(r.dimensionId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.kableClientId == nil {
+		return localVarReturnValue, nil, reportError("kableClientId is required and must be specified")
+	}
+	if r.kableClientSecret == nil {
+		return localVarReturnValue, nil, reportError("kableClientSecret is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
+	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
+	// body params
+	localVarPostBody = r.updateDimensionRequest
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

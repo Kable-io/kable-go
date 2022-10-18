@@ -15,12 +15,10 @@ import (
 	"encoding/json"
 )
 
-// Plan struct for Plan
-type Plan struct {
-	// A Kable-defined identifier for the plan.
-	PlanId string `json:"planId"`
+// UpdatePlanRequest struct for UpdatePlanRequest
+type UpdatePlanRequest struct {
 	// A human-readable name for the plan, visible on dashboards, invoices, and reports.
-	Name string `json:"name"`
+	Name *string `json:"name,omitempty"`
 	// An identifier for the plan as defined by your API.
 	ExternalId *string `json:"externalId,omitempty"`
 	// A human-readable description for the plan, visible on dashboards, invoices, and reports.
@@ -28,90 +26,69 @@ type Plan struct {
 	// An additional identifier for the plan, defined by you, that is *not* visible to customers. If you have different *Monthly Active Users Plan*s for different cohorts of customers, this is a useful place to differentiate those.
 	Nickname *string `json:"nickname,omitempty"`
 	// The type of plan.
-	Type string `json:"type"`
+	Type *string `json:"type,omitempty"`
 	// The billing interval for the plan.
-	Interval string `json:"interval"`
-	// An identifier of the dimension along which usage is aggregated in this plan, relevant only for usage plans.
+	Interval *string `json:"interval,omitempty"`
+	// An identifier of the dimension along which usage is aggregated in this plan.
 	DimensionId *string `json:"dimensionId,omitempty"`
 	// The aggregation along which usage metrics are calculated in this plan, relevant only for usage plans.
 	Aggregation *string `json:"aggregation,omitempty"`
-	Price Price `json:"price"`
+	Price *Price `json:"price,omitempty"`
 	// Arbitrary key-value pairs to attach to the object that can be useful for controlling functionality inside your API.
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 }
 
-// NewPlan instantiates a new Plan object
+// NewUpdatePlanRequest instantiates a new UpdatePlanRequest object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewPlan(planId string, name string, type_ string, interval string, price Price) *Plan {
-	this := Plan{}
-	this.PlanId = planId
-	this.Name = name
-	this.Type = type_
-	this.Interval = interval
-	this.Price = price
+func NewUpdatePlanRequest() *UpdatePlanRequest {
+	this := UpdatePlanRequest{}
 	return &this
 }
 
-// NewPlanWithDefaults instantiates a new Plan object
+// NewUpdatePlanRequestWithDefaults instantiates a new UpdatePlanRequest object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewPlanWithDefaults() *Plan {
-	this := Plan{}
+func NewUpdatePlanRequestWithDefaults() *UpdatePlanRequest {
+	this := UpdatePlanRequest{}
 	return &this
 }
 
-// GetPlanId returns the PlanId field value
-func (o *Plan) GetPlanId() string {
-	if o == nil {
+// GetName returns the Name field value if set, zero value otherwise.
+func (o *UpdatePlanRequest) GetName() string {
+	if o == nil || o.Name == nil {
 		var ret string
 		return ret
 	}
-
-	return o.PlanId
+	return *o.Name
 }
 
-// GetPlanIdOk returns a tuple with the PlanId field value
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Plan) GetPlanIdOk() (*string, bool) {
-	if o == nil {
+func (o *UpdatePlanRequest) GetNameOk() (*string, bool) {
+	if o == nil || o.Name == nil {
 		return nil, false
 	}
-	return &o.PlanId, true
+	return o.Name, true
 }
 
-// SetPlanId sets field value
-func (o *Plan) SetPlanId(v string) {
-	o.PlanId = v
-}
-
-// GetName returns the Name field value
-func (o *Plan) GetName() string {
-	if o == nil {
-		var ret string
-		return ret
+// HasName returns a boolean if a field has been set.
+func (o *UpdatePlanRequest) HasName() bool {
+	if o != nil && o.Name != nil {
+		return true
 	}
 
-	return o.Name
+	return false
 }
 
-// GetNameOk returns a tuple with the Name field value
-// and a boolean to check if the value has been set.
-func (o *Plan) GetNameOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.Name, true
-}
-
-// SetName sets field value
-func (o *Plan) SetName(v string) {
-	o.Name = v
+// SetName gets a reference to the given string and assigns it to the Name field.
+func (o *UpdatePlanRequest) SetName(v string) {
+	o.Name = &v
 }
 
 // GetExternalId returns the ExternalId field value if set, zero value otherwise.
-func (o *Plan) GetExternalId() string {
+func (o *UpdatePlanRequest) GetExternalId() string {
 	if o == nil || o.ExternalId == nil {
 		var ret string
 		return ret
@@ -121,7 +98,7 @@ func (o *Plan) GetExternalId() string {
 
 // GetExternalIdOk returns a tuple with the ExternalId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Plan) GetExternalIdOk() (*string, bool) {
+func (o *UpdatePlanRequest) GetExternalIdOk() (*string, bool) {
 	if o == nil || o.ExternalId == nil {
 		return nil, false
 	}
@@ -129,7 +106,7 @@ func (o *Plan) GetExternalIdOk() (*string, bool) {
 }
 
 // HasExternalId returns a boolean if a field has been set.
-func (o *Plan) HasExternalId() bool {
+func (o *UpdatePlanRequest) HasExternalId() bool {
 	if o != nil && o.ExternalId != nil {
 		return true
 	}
@@ -138,12 +115,12 @@ func (o *Plan) HasExternalId() bool {
 }
 
 // SetExternalId gets a reference to the given string and assigns it to the ExternalId field.
-func (o *Plan) SetExternalId(v string) {
+func (o *UpdatePlanRequest) SetExternalId(v string) {
 	o.ExternalId = &v
 }
 
 // GetDescription returns the Description field value if set, zero value otherwise.
-func (o *Plan) GetDescription() string {
+func (o *UpdatePlanRequest) GetDescription() string {
 	if o == nil || o.Description == nil {
 		var ret string
 		return ret
@@ -153,7 +130,7 @@ func (o *Plan) GetDescription() string {
 
 // GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Plan) GetDescriptionOk() (*string, bool) {
+func (o *UpdatePlanRequest) GetDescriptionOk() (*string, bool) {
 	if o == nil || o.Description == nil {
 		return nil, false
 	}
@@ -161,7 +138,7 @@ func (o *Plan) GetDescriptionOk() (*string, bool) {
 }
 
 // HasDescription returns a boolean if a field has been set.
-func (o *Plan) HasDescription() bool {
+func (o *UpdatePlanRequest) HasDescription() bool {
 	if o != nil && o.Description != nil {
 		return true
 	}
@@ -170,12 +147,12 @@ func (o *Plan) HasDescription() bool {
 }
 
 // SetDescription gets a reference to the given string and assigns it to the Description field.
-func (o *Plan) SetDescription(v string) {
+func (o *UpdatePlanRequest) SetDescription(v string) {
 	o.Description = &v
 }
 
 // GetNickname returns the Nickname field value if set, zero value otherwise.
-func (o *Plan) GetNickname() string {
+func (o *UpdatePlanRequest) GetNickname() string {
 	if o == nil || o.Nickname == nil {
 		var ret string
 		return ret
@@ -185,7 +162,7 @@ func (o *Plan) GetNickname() string {
 
 // GetNicknameOk returns a tuple with the Nickname field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Plan) GetNicknameOk() (*string, bool) {
+func (o *UpdatePlanRequest) GetNicknameOk() (*string, bool) {
 	if o == nil || o.Nickname == nil {
 		return nil, false
 	}
@@ -193,7 +170,7 @@ func (o *Plan) GetNicknameOk() (*string, bool) {
 }
 
 // HasNickname returns a boolean if a field has been set.
-func (o *Plan) HasNickname() bool {
+func (o *UpdatePlanRequest) HasNickname() bool {
 	if o != nil && o.Nickname != nil {
 		return true
 	}
@@ -202,60 +179,76 @@ func (o *Plan) HasNickname() bool {
 }
 
 // SetNickname gets a reference to the given string and assigns it to the Nickname field.
-func (o *Plan) SetNickname(v string) {
+func (o *UpdatePlanRequest) SetNickname(v string) {
 	o.Nickname = &v
 }
 
-// GetType returns the Type field value
-func (o *Plan) GetType() string {
-	if o == nil {
+// GetType returns the Type field value if set, zero value otherwise.
+func (o *UpdatePlanRequest) GetType() string {
+	if o == nil || o.Type == nil {
 		var ret string
 		return ret
 	}
-
-	return o.Type
+	return *o.Type
 }
 
-// GetTypeOk returns a tuple with the Type field value
+// GetTypeOk returns a tuple with the Type field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Plan) GetTypeOk() (*string, bool) {
-	if o == nil {
+func (o *UpdatePlanRequest) GetTypeOk() (*string, bool) {
+	if o == nil || o.Type == nil {
 		return nil, false
 	}
-	return &o.Type, true
+	return o.Type, true
 }
 
-// SetType sets field value
-func (o *Plan) SetType(v string) {
-	o.Type = v
+// HasType returns a boolean if a field has been set.
+func (o *UpdatePlanRequest) HasType() bool {
+	if o != nil && o.Type != nil {
+		return true
+	}
+
+	return false
 }
 
-// GetInterval returns the Interval field value
-func (o *Plan) GetInterval() string {
-	if o == nil {
+// SetType gets a reference to the given string and assigns it to the Type field.
+func (o *UpdatePlanRequest) SetType(v string) {
+	o.Type = &v
+}
+
+// GetInterval returns the Interval field value if set, zero value otherwise.
+func (o *UpdatePlanRequest) GetInterval() string {
+	if o == nil || o.Interval == nil {
 		var ret string
 		return ret
 	}
-
-	return o.Interval
+	return *o.Interval
 }
 
-// GetIntervalOk returns a tuple with the Interval field value
+// GetIntervalOk returns a tuple with the Interval field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Plan) GetIntervalOk() (*string, bool) {
-	if o == nil {
+func (o *UpdatePlanRequest) GetIntervalOk() (*string, bool) {
+	if o == nil || o.Interval == nil {
 		return nil, false
 	}
-	return &o.Interval, true
+	return o.Interval, true
 }
 
-// SetInterval sets field value
-func (o *Plan) SetInterval(v string) {
-	o.Interval = v
+// HasInterval returns a boolean if a field has been set.
+func (o *UpdatePlanRequest) HasInterval() bool {
+	if o != nil && o.Interval != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetInterval gets a reference to the given string and assigns it to the Interval field.
+func (o *UpdatePlanRequest) SetInterval(v string) {
+	o.Interval = &v
 }
 
 // GetDimensionId returns the DimensionId field value if set, zero value otherwise.
-func (o *Plan) GetDimensionId() string {
+func (o *UpdatePlanRequest) GetDimensionId() string {
 	if o == nil || o.DimensionId == nil {
 		var ret string
 		return ret
@@ -265,7 +258,7 @@ func (o *Plan) GetDimensionId() string {
 
 // GetDimensionIdOk returns a tuple with the DimensionId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Plan) GetDimensionIdOk() (*string, bool) {
+func (o *UpdatePlanRequest) GetDimensionIdOk() (*string, bool) {
 	if o == nil || o.DimensionId == nil {
 		return nil, false
 	}
@@ -273,7 +266,7 @@ func (o *Plan) GetDimensionIdOk() (*string, bool) {
 }
 
 // HasDimensionId returns a boolean if a field has been set.
-func (o *Plan) HasDimensionId() bool {
+func (o *UpdatePlanRequest) HasDimensionId() bool {
 	if o != nil && o.DimensionId != nil {
 		return true
 	}
@@ -282,12 +275,12 @@ func (o *Plan) HasDimensionId() bool {
 }
 
 // SetDimensionId gets a reference to the given string and assigns it to the DimensionId field.
-func (o *Plan) SetDimensionId(v string) {
+func (o *UpdatePlanRequest) SetDimensionId(v string) {
 	o.DimensionId = &v
 }
 
 // GetAggregation returns the Aggregation field value if set, zero value otherwise.
-func (o *Plan) GetAggregation() string {
+func (o *UpdatePlanRequest) GetAggregation() string {
 	if o == nil || o.Aggregation == nil {
 		var ret string
 		return ret
@@ -297,7 +290,7 @@ func (o *Plan) GetAggregation() string {
 
 // GetAggregationOk returns a tuple with the Aggregation field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Plan) GetAggregationOk() (*string, bool) {
+func (o *UpdatePlanRequest) GetAggregationOk() (*string, bool) {
 	if o == nil || o.Aggregation == nil {
 		return nil, false
 	}
@@ -305,7 +298,7 @@ func (o *Plan) GetAggregationOk() (*string, bool) {
 }
 
 // HasAggregation returns a boolean if a field has been set.
-func (o *Plan) HasAggregation() bool {
+func (o *UpdatePlanRequest) HasAggregation() bool {
 	if o != nil && o.Aggregation != nil {
 		return true
 	}
@@ -314,36 +307,44 @@ func (o *Plan) HasAggregation() bool {
 }
 
 // SetAggregation gets a reference to the given string and assigns it to the Aggregation field.
-func (o *Plan) SetAggregation(v string) {
+func (o *UpdatePlanRequest) SetAggregation(v string) {
 	o.Aggregation = &v
 }
 
-// GetPrice returns the Price field value
-func (o *Plan) GetPrice() Price {
-	if o == nil {
+// GetPrice returns the Price field value if set, zero value otherwise.
+func (o *UpdatePlanRequest) GetPrice() Price {
+	if o == nil || o.Price == nil {
 		var ret Price
 		return ret
 	}
-
-	return o.Price
+	return *o.Price
 }
 
-// GetPriceOk returns a tuple with the Price field value
+// GetPriceOk returns a tuple with the Price field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Plan) GetPriceOk() (*Price, bool) {
-	if o == nil {
+func (o *UpdatePlanRequest) GetPriceOk() (*Price, bool) {
+	if o == nil || o.Price == nil {
 		return nil, false
 	}
-	return &o.Price, true
+	return o.Price, true
 }
 
-// SetPrice sets field value
-func (o *Plan) SetPrice(v Price) {
-	o.Price = v
+// HasPrice returns a boolean if a field has been set.
+func (o *UpdatePlanRequest) HasPrice() bool {
+	if o != nil && o.Price != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPrice gets a reference to the given Price and assigns it to the Price field.
+func (o *UpdatePlanRequest) SetPrice(v Price) {
+	o.Price = &v
 }
 
 // GetMetadata returns the Metadata field value if set, zero value otherwise.
-func (o *Plan) GetMetadata() map[string]interface{} {
+func (o *UpdatePlanRequest) GetMetadata() map[string]interface{} {
 	if o == nil || o.Metadata == nil {
 		var ret map[string]interface{}
 		return ret
@@ -353,7 +354,7 @@ func (o *Plan) GetMetadata() map[string]interface{} {
 
 // GetMetadataOk returns a tuple with the Metadata field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Plan) GetMetadataOk() (map[string]interface{}, bool) {
+func (o *UpdatePlanRequest) GetMetadataOk() (map[string]interface{}, bool) {
 	if o == nil || o.Metadata == nil {
 		return nil, false
 	}
@@ -361,7 +362,7 @@ func (o *Plan) GetMetadataOk() (map[string]interface{}, bool) {
 }
 
 // HasMetadata returns a boolean if a field has been set.
-func (o *Plan) HasMetadata() bool {
+func (o *UpdatePlanRequest) HasMetadata() bool {
 	if o != nil && o.Metadata != nil {
 		return true
 	}
@@ -370,16 +371,13 @@ func (o *Plan) HasMetadata() bool {
 }
 
 // SetMetadata gets a reference to the given map[string]interface{} and assigns it to the Metadata field.
-func (o *Plan) SetMetadata(v map[string]interface{}) {
+func (o *UpdatePlanRequest) SetMetadata(v map[string]interface{}) {
 	o.Metadata = v
 }
 
-func (o Plan) MarshalJSON() ([]byte, error) {
+func (o UpdatePlanRequest) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["planId"] = o.PlanId
-	}
-	if true {
+	if o.Name != nil {
 		toSerialize["name"] = o.Name
 	}
 	if o.ExternalId != nil {
@@ -391,10 +389,10 @@ func (o Plan) MarshalJSON() ([]byte, error) {
 	if o.Nickname != nil {
 		toSerialize["nickname"] = o.Nickname
 	}
-	if true {
+	if o.Type != nil {
 		toSerialize["type"] = o.Type
 	}
-	if true {
+	if o.Interval != nil {
 		toSerialize["interval"] = o.Interval
 	}
 	if o.DimensionId != nil {
@@ -403,7 +401,7 @@ func (o Plan) MarshalJSON() ([]byte, error) {
 	if o.Aggregation != nil {
 		toSerialize["aggregation"] = o.Aggregation
 	}
-	if true {
+	if o.Price != nil {
 		toSerialize["price"] = o.Price
 	}
 	if o.Metadata != nil {
@@ -412,38 +410,38 @@ func (o Plan) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-type NullablePlan struct {
-	value *Plan
+type NullableUpdatePlanRequest struct {
+	value *UpdatePlanRequest
 	isSet bool
 }
 
-func (v NullablePlan) Get() *Plan {
+func (v NullableUpdatePlanRequest) Get() *UpdatePlanRequest {
 	return v.value
 }
 
-func (v *NullablePlan) Set(val *Plan) {
+func (v *NullableUpdatePlanRequest) Set(val *UpdatePlanRequest) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullablePlan) IsSet() bool {
+func (v NullableUpdatePlanRequest) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullablePlan) Unset() {
+func (v *NullableUpdatePlanRequest) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullablePlan(val *Plan) *NullablePlan {
-	return &NullablePlan{value: val, isSet: true}
+func NewNullableUpdatePlanRequest(val *UpdatePlanRequest) *NullableUpdatePlanRequest {
+	return &NullableUpdatePlanRequest{value: val, isSet: true}
 }
 
-func (v NullablePlan) MarshalJSON() ([]byte, error) {
+func (v NullableUpdatePlanRequest) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullablePlan) UnmarshalJSON(src []byte) error {
+func (v *NullableUpdatePlanRequest) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

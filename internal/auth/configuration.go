@@ -1,7 +1,7 @@
 /*
 Kable SDK
 
-Used for generation of SDK
+Used for generation of SDK 
 
 API version: 0.0.1
 Contact: contact@kable.io

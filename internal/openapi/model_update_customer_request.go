@@ -17,7 +17,11 @@ import (
 
 // UpdateCustomerRequest struct for UpdateCustomerRequest
 type UpdateCustomerRequest struct {
+	// The name of the customer, visible on dashboards, invoices, and reports.
 	CompanyName *string `json:"companyName,omitempty"`
+	// The currency with which this customer pays for plans.
+	Currency *string `json:"currency,omitempty"`
+	// The customer's Stripe `customer_id`, if any, for automatic invoice processing through Stripe.
 	StripeCustomerId *string `json:"stripeCustomerId,omitempty"`
 }
 
@@ -70,6 +74,38 @@ func (o *UpdateCustomerRequest) SetCompanyName(v string) {
 	o.CompanyName = &v
 }
 
+// GetCurrency returns the Currency field value if set, zero value otherwise.
+func (o *UpdateCustomerRequest) GetCurrency() string {
+	if o == nil || o.Currency == nil {
+		var ret string
+		return ret
+	}
+	return *o.Currency
+}
+
+// GetCurrencyOk returns a tuple with the Currency field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateCustomerRequest) GetCurrencyOk() (*string, bool) {
+	if o == nil || o.Currency == nil {
+		return nil, false
+	}
+	return o.Currency, true
+}
+
+// HasCurrency returns a boolean if a field has been set.
+func (o *UpdateCustomerRequest) HasCurrency() bool {
+	if o != nil && o.Currency != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetCurrency gets a reference to the given string and assigns it to the Currency field.
+func (o *UpdateCustomerRequest) SetCurrency(v string) {
+	o.Currency = &v
+}
+
 // GetStripeCustomerId returns the StripeCustomerId field value if set, zero value otherwise.
 func (o *UpdateCustomerRequest) GetStripeCustomerId() string {
 	if o == nil || o.StripeCustomerId == nil {
@@ -106,6 +142,9 @@ func (o UpdateCustomerRequest) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
 	if o.CompanyName != nil {
 		toSerialize["companyName"] = o.CompanyName
+	}
+	if o.Currency != nil {
+		toSerialize["currency"] = o.Currency
 	}
 	if o.StripeCustomerId != nil {
 		toSerialize["stripeCustomerId"] = o.StripeCustomerId

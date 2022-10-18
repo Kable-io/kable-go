@@ -15,138 +15,94 @@ import (
 	"encoding/json"
 )
 
-// AddCustomerPlansRequest struct for AddCustomerPlansRequest
-type AddCustomerPlansRequest struct {
-	// The identifier for a single plan.
-	PlanId *string `json:"planId,omitempty"`
-	// The identifiers for many plans.
-	PlanIds []string `json:"planIds,omitempty"`
+// GetCustomerCreditBalance200Response struct for GetCustomerCreditBalance200Response
+type GetCustomerCreditBalance200Response struct {
+	// The customer's available credit grant balance
+	Available float32 `json:"available"`
 }
 
-// NewAddCustomerPlansRequest instantiates a new AddCustomerPlansRequest object
+// NewGetCustomerCreditBalance200Response instantiates a new GetCustomerCreditBalance200Response object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAddCustomerPlansRequest() *AddCustomerPlansRequest {
-	this := AddCustomerPlansRequest{}
+func NewGetCustomerCreditBalance200Response(available float32) *GetCustomerCreditBalance200Response {
+	this := GetCustomerCreditBalance200Response{}
+	this.Available = available
 	return &this
 }
 
-// NewAddCustomerPlansRequestWithDefaults instantiates a new AddCustomerPlansRequest object
+// NewGetCustomerCreditBalance200ResponseWithDefaults instantiates a new GetCustomerCreditBalance200Response object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewAddCustomerPlansRequestWithDefaults() *AddCustomerPlansRequest {
-	this := AddCustomerPlansRequest{}
+func NewGetCustomerCreditBalance200ResponseWithDefaults() *GetCustomerCreditBalance200Response {
+	this := GetCustomerCreditBalance200Response{}
 	return &this
 }
 
-// GetPlanId returns the PlanId field value if set, zero value otherwise.
-func (o *AddCustomerPlansRequest) GetPlanId() string {
-	if o == nil || o.PlanId == nil {
-		var ret string
+// GetAvailable returns the Available field value
+func (o *GetCustomerCreditBalance200Response) GetAvailable() float32 {
+	if o == nil {
+		var ret float32
 		return ret
 	}
-	return *o.PlanId
+
+	return o.Available
 }
 
-// GetPlanIdOk returns a tuple with the PlanId field value if set, nil otherwise
+// GetAvailableOk returns a tuple with the Available field value
 // and a boolean to check if the value has been set.
-func (o *AddCustomerPlansRequest) GetPlanIdOk() (*string, bool) {
-	if o == nil || o.PlanId == nil {
+func (o *GetCustomerCreditBalance200Response) GetAvailableOk() (*float32, bool) {
+	if o == nil {
 		return nil, false
 	}
-	return o.PlanId, true
+	return &o.Available, true
 }
 
-// HasPlanId returns a boolean if a field has been set.
-func (o *AddCustomerPlansRequest) HasPlanId() bool {
-	if o != nil && o.PlanId != nil {
-		return true
-	}
-
-	return false
+// SetAvailable sets field value
+func (o *GetCustomerCreditBalance200Response) SetAvailable(v float32) {
+	o.Available = v
 }
 
-// SetPlanId gets a reference to the given string and assigns it to the PlanId field.
-func (o *AddCustomerPlansRequest) SetPlanId(v string) {
-	o.PlanId = &v
-}
-
-// GetPlanIds returns the PlanIds field value if set, zero value otherwise.
-func (o *AddCustomerPlansRequest) GetPlanIds() []string {
-	if o == nil || o.PlanIds == nil {
-		var ret []string
-		return ret
-	}
-	return o.PlanIds
-}
-
-// GetPlanIdsOk returns a tuple with the PlanIds field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *AddCustomerPlansRequest) GetPlanIdsOk() ([]string, bool) {
-	if o == nil || o.PlanIds == nil {
-		return nil, false
-	}
-	return o.PlanIds, true
-}
-
-// HasPlanIds returns a boolean if a field has been set.
-func (o *AddCustomerPlansRequest) HasPlanIds() bool {
-	if o != nil && o.PlanIds != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetPlanIds gets a reference to the given []string and assigns it to the PlanIds field.
-func (o *AddCustomerPlansRequest) SetPlanIds(v []string) {
-	o.PlanIds = v
-}
-
-func (o AddCustomerPlansRequest) MarshalJSON() ([]byte, error) {
+func (o GetCustomerCreditBalance200Response) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.PlanId != nil {
-		toSerialize["planId"] = o.PlanId
-	}
-	if o.PlanIds != nil {
-		toSerialize["planIds"] = o.PlanIds
+	if true {
+		toSerialize["available"] = o.Available
 	}
 	return json.Marshal(toSerialize)
 }
 
-type NullableAddCustomerPlansRequest struct {
-	value *AddCustomerPlansRequest
+type NullableGetCustomerCreditBalance200Response struct {
+	value *GetCustomerCreditBalance200Response
 	isSet bool
 }
 
-func (v NullableAddCustomerPlansRequest) Get() *AddCustomerPlansRequest {
+func (v NullableGetCustomerCreditBalance200Response) Get() *GetCustomerCreditBalance200Response {
 	return v.value
 }
 
-func (v *NullableAddCustomerPlansRequest) Set(val *AddCustomerPlansRequest) {
+func (v *NullableGetCustomerCreditBalance200Response) Set(val *GetCustomerCreditBalance200Response) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableAddCustomerPlansRequest) IsSet() bool {
+func (v NullableGetCustomerCreditBalance200Response) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableAddCustomerPlansRequest) Unset() {
+func (v *NullableGetCustomerCreditBalance200Response) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableAddCustomerPlansRequest(val *AddCustomerPlansRequest) *NullableAddCustomerPlansRequest {
-	return &NullableAddCustomerPlansRequest{value: val, isSet: true}
+func NewNullableGetCustomerCreditBalance200Response(val *GetCustomerCreditBalance200Response) *NullableGetCustomerCreditBalance200Response {
+	return &NullableGetCustomerCreditBalance200Response{value: val, isSet: true}
 }
 
-func (v NullableAddCustomerPlansRequest) MarshalJSON() ([]byte, error) {
+func (v NullableGetCustomerCreditBalance200Response) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableAddCustomerPlansRequest) UnmarshalJSON(src []byte) error {
+func (v *NullableGetCustomerCreditBalance200Response) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

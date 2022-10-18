@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**PlanId** | Pointer to **string** |  | [optional] 
-**PlanIds** | Pointer to **[]string** |  | [optional] 
+**PlanId** | Pointer to **string** | The identifier for a single plan. | [optional] 
+**PlanIds** | Pointer to **[]string** | The identifiers for many plans. | [optional] 
 
 ## Methods
 
