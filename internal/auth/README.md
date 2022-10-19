@@ -79,7 +79,7 @@ All URIs are relative to *https://live.kable.io/api/v1*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*AuthenticateApi* | [**Authenticate**](docs/AuthenticateApi.md#authenticate) | **Post** /authenticate | test authentication
+*AuthenticateApi* | [**Authenticate**](docs/AuthenticateApi.md#authenticate) | **Post** /authenticate | Authenticate an API request
 
 
 ## Documentation For Models

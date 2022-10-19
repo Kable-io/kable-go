@@ -4,7 +4,7 @@ All URIs are relative to *https://live.kable.io/api/v1*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**Authenticate**](AuthenticateApi.md#Authenticate) | **Post** /authenticate | test authentication
+[**Authenticate**](AuthenticateApi.md#Authenticate) | **Post** /authenticate | Authenticate an API request
 
 
 
@@ -12,7 +12,7 @@ Method | HTTP request | Description
 
 > Authenticate(ctx).KableClientId(kableClientId).KableClientSecret(kableClientSecret).XClientId(xClientId).Execute()
 
-test authentication
+Authenticate an API request
 
 
 
