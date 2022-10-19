@@ -83,7 +83,7 @@ func (e *EventsApi) flush() {
 		for _, event := range openapiEvents {
 			jsonEvent, err := json.Marshal(event)
 			if err != nil {
-				log.Printf("[KABLE] Kable Event (Error): %T", event)
+				log.Printf("[KABLE] Kable Event (Error): %+v", event)
 			} else {
 				log.Printf("[KABLE] Kable Event (Error): %s", jsonEvent)
 			}
