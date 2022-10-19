@@ -54,9 +54,11 @@ func (r ApiAuthenticateRequest) Execute() (*http.Response, error) {
 }
 
 /*
-Authenticate test authentication
+Authenticate Authenticate an API request
 
-Test authentication
+Authenticate an API request. 
+
+Called when using Kable as an authentication provider to authenticate your customers. Also called by Kable SDKs on library initialization to confirm a valid configuration.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().

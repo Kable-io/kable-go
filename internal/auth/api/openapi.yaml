@@ -17,8 +17,9 @@ tags:
 paths:
   /authenticate:
     post:
-      description: |
-        Test authentication
+      description: "Authenticate an API request. \n\nCalled when using Kable as an\
+        \ authentication provider to authenticate your customers. Also called by Kable\
+        \ SDKs on library initialization to confirm a valid configuration.\n"
       operationId: authenticate
       parameters:
       - description: "Your client ID, found in the dashboard of your Kable account."
@@ -55,7 +56,7 @@ paths:
           description: successful authentication
         "401":
           description: unauthorized
-      summary: test authentication
+      summary: Authenticate an API request
       tags:
       - authenticate
 components:
