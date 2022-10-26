@@ -1,14 +1,12 @@
 package kable
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
 
 	"github.com/Kable-io/kable-go/internal/auth"
 	"github.com/Kable-io/kable-go/internal/openapi"
-	"github.com/Kable-io/kable-go/internal/version"
 )
 
 type (
@@ -57,9 +55,6 @@ func New(options *KableOptions) *Kable {
 
 	apiConf.AddDefaultHeader("Content-Type", "application/json")
 	authConf.AddDefaultHeader("Content-Type", "application/json")
-
-	apiConf.UserAgent = fmt.Sprintf("kable-libs/%s/go", version.Version)
-	authConf.UserAgent = fmt.Sprintf("kable-libs/%s/go", version.Version)
 
 	apiClient := openapi.NewAPIClient(apiConf)
 	authClient := auth.NewAPIClient(authConf)
