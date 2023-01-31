@@ -132,7 +132,15 @@ func NewEventsApi(apiClient *openapi.APIClient, options *KableOptions) *EventsAp
 		api:     apiClient,
 		options: options,
 		ctx:     ctx,
-		queue:   []Event{},
+	}
+
+	// if the queue size is less than 2, then recording any number of events will result
+	// in calling flush, so there will be no need to initiate the queue, as it won't be used.
+	// also, as flush won't be needed, then there's no need
+	if options.MaxQueueSize > 1 {
+		// initiate the queue with the max queue size specified, so that reporting any
+		// number of events below that number will not result in allocating a new queue.
+		eventsApi.queue = make([]Event, 0, options.MaxQueueSize)
 	}
 
 	go eventsApi.scheduleFlushQueue()
