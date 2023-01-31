@@ -1,18 +1,18 @@
 # \UsageApi
 
-All URIs are relative to *https://live.kable.io/api/v1*
+All URIs are relative to *https://live.kable.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**GetUsage**](UsageApi.md#GetUsage) | **Post** /usage/get | get usage metrics
+[**GetUsage**](UsageApi.md#GetUsage) | **Post** /api/v1/usage/get | get usage metric
 
 
 
 ## GetUsage
 
-> UsageMetricResponse GetUsage(ctx).KableClientId(kableClientId).KableClientSecret(kableClientSecret).GetUsageRequest(getUsageRequest).Execute()
+> UsageMetricResponseDto GetUsage(ctx).KableClientId(kableClientId).KableClientSecret(kableClientSecret).UsageMetricRequestDto(usageMetricRequestDto).Execute()
 
-get usage metrics
+get usage metric
 
 
 
@@ -30,18 +30,18 @@ import (
 )
 
 func main() {
-    kableClientId := "kci_3c90e9ac92c64f31ae8ed84d21e18740" // string | Your client ID, found in the dashboard of your Kable account.
-    kableClientSecret := "sk_test.jI92Cbu0.XeHWdYM1VTLy4oLtGMw8wrmpt5q9d04n" // string | Your `LIVE` or `TEST` secret key, depending on the environment in which the key is being created.
-    getUsageRequest := *openapiclient.NewGetUsageRequest("COUNT_DISTINCT", time.Now(), time.Now(), "DAY") // GetUsageRequest | Parameters of the usage metrics query to execute. (optional)
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+    usageMetricRequestDto := *openapiclient.NewUsageMetricRequestDto("COUNT", time.Now(), time.Now(), "DAY") // UsageMetricRequestDto | 
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.UsageApi.GetUsage(context.Background()).KableClientId(kableClientId).KableClientSecret(kableClientSecret).GetUsageRequest(getUsageRequest).Execute()
+    resp, r, err := apiClient.UsageApi.GetUsage(context.Background()).KableClientId(kableClientId).KableClientSecret(kableClientSecret).UsageMetricRequestDto(usageMetricRequestDto).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `UsageApi.GetUsage``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
-    // response from `GetUsage`: UsageMetricResponse
+    // response from `GetUsage`: UsageMetricResponseDto
     fmt.Fprintf(os.Stdout, "Response from `UsageApi.GetUsage`: %v\n", resp)
 }
 ```
@@ -57,13 +57,13 @@ Other parameters are passed through a pointer to a apiGetUsageRequest struct via
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **kableClientId** | **string** | Your client ID, found in the dashboard of your Kable account. | 
- **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key, depending on the environment in which the key is being created. | 
- **getUsageRequest** | [**GetUsageRequest**](GetUsageRequest.md) | Parameters of the usage metrics query to execute. | 
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
+ **usageMetricRequestDto** | [**UsageMetricRequestDto**](UsageMetricRequestDto.md) |  | 
 
 ### Return type
 
-[**UsageMetricResponse**](UsageMetricResponse.md)
+[**UsageMetricResponseDto**](UsageMetricResponseDto.md)
 
 ### Authorization
 

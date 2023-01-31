@@ -1,16 +1,16 @@
 # \EventsApi
 
-All URIs are relative to *https://live.kable.io/api/v1*
+All URIs are relative to *https://live.kable.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**CreateEvents**](EventsApi.md#CreateEvents) | **Post** /events/create | record events
+[**CreateEvent**](EventsApi.md#CreateEvent) | **Post** /api/v1/events/create | record events
 
 
 
-## CreateEvents
+## CreateEvent
 
-> CreateEvents(ctx).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Event(event).Execute()
+> CreateEvent(ctx).KableClientId(kableClientId).KableClientSecret(kableClientSecret).EventDto(eventDto).Execute()
 
 record events
 
@@ -30,15 +30,15 @@ import (
 )
 
 func main() {
-    kableClientId := "kci_3c90e9ac92c64f31ae8ed84d21e18740" // string | Your client ID, found in the dashboard of your Kable account.
-    kableClientSecret := "sk_test.jI92Cbu0.XeHWdYM1VTLy4oLtGMw8wrmpt5q9d04n" // string | Your `LIVE` or `TEST` secret key, depending on the environment in which the key is being created.
-    event := []openapiclient.Event{*openapiclient.NewEvent("ClientId_example", time.Now())} // []Event | Events containing information about things that happened in your API (optional)
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+    eventDto := []openapiclient.EventDto{*openapiclient.NewEventDto("yourcompanyuser_1234567890", time.Now())} // []EventDto | An event or list of usage events to record.
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.EventsApi.CreateEvents(context.Background()).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Event(event).Execute()
+    resp, r, err := apiClient.EventsApi.CreateEvent(context.Background()).KableClientId(kableClientId).KableClientSecret(kableClientSecret).EventDto(eventDto).Execute()
     if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `EventsApi.CreateEvents``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Error when calling `EventsApi.CreateEvent``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
 }
@@ -50,14 +50,14 @@ func main() {
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiCreateEventsRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiCreateEventRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **kableClientId** | **string** | Your client ID, found in the dashboard of your Kable account. | 
- **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key, depending on the environment in which the key is being created. | 
- **event** | [**[]Event**](Event.md) | Events containing information about things that happened in your API | 
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
+ **eventDto** | [**[]EventDto**](EventDto.md) | An event or list of usage events to record. | 
 
 ### Return type
 
@@ -70,7 +70,7 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: application/json
-- **Accept**: Not defined
+- **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
 [[Back to Model list]](../README.md#documentation-for-models)

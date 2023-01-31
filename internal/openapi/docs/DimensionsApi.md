@@ -1,22 +1,22 @@
 # \DimensionsApi
 
-All URIs are relative to *https://live.kable.io/api/v1*
+All URIs are relative to *https://live.kable.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**CreateDimension**](DimensionsApi.md#CreateDimension) | **Post** /dimensions/create | create a dimension
-[**DeleteDimension**](DimensionsApi.md#DeleteDimension) | **Post** /dimensions/{dimensionId}/delete | delete a dimension
-[**GetAllDimensions**](DimensionsApi.md#GetAllDimensions) | **Get** /dimensions | get all dimensions
-[**GetDimension**](DimensionsApi.md#GetDimension) | **Get** /dimensions/{dimensionId} | get dimension
-[**UpdateDimension**](DimensionsApi.md#UpdateDimension) | **Post** /dimensions/{dimensionId}/update | update a dimension
+[**CreateDimension**](DimensionsApi.md#CreateDimension) | **Post** /api/v1/dimensions/create | create dimension
+[**DeleteDimension**](DimensionsApi.md#DeleteDimension) | **Post** /api/v1/dimensions/{dimensionId}/delete | delete dimension
+[**GetDimension**](DimensionsApi.md#GetDimension) | **Get** /api/v1/dimensions/{dimensionId} | get dimension
+[**GetDimensions**](DimensionsApi.md#GetDimensions) | **Get** /api/v1/dimensions | get all dimensions
+[**UpdateDimension**](DimensionsApi.md#UpdateDimension) | **Post** /api/v1/dimensions/{dimensionId}/update | update dimension
 
 
 
 ## CreateDimension
 
-> Dimension CreateDimension(ctx).KableClientId(kableClientId).KableClientSecret(kableClientSecret).CreateDimensionRequest(createDimensionRequest).Execute()
+> DimensionResponseDto CreateDimension(ctx).KableClientId(kableClientId).KableClientSecret(kableClientSecret).CreateDimensionRequestDto(createDimensionRequestDto).Execute()
 
-create a dimension
+create dimension
 
 
 
@@ -33,18 +33,18 @@ import (
 )
 
 func main() {
-    kableClientId := "kci_3c90e9ac92c64f31ae8ed84d21e18740" // string | Your client ID, found in the dashboard of your Kable account.
-    kableClientSecret := "sk_test.jI92Cbu0.XeHWdYM1VTLy4oLtGMw8wrmpt5q9d04n" // string | Your `LIVE` or `TEST` secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for `LIVE` and `TEST` environments of your API.
-    createDimensionRequest := *openapiclient.NewCreateDimensionRequest() // CreateDimensionRequest | Information about the dimension to create. (optional)
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+    createDimensionRequestDto := *openapiclient.NewCreateDimensionRequestDto("userId", "User") // CreateDimensionRequestDto | 
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.DimensionsApi.CreateDimension(context.Background()).KableClientId(kableClientId).KableClientSecret(kableClientSecret).CreateDimensionRequest(createDimensionRequest).Execute()
+    resp, r, err := apiClient.DimensionsApi.CreateDimension(context.Background()).KableClientId(kableClientId).KableClientSecret(kableClientSecret).CreateDimensionRequestDto(createDimensionRequestDto).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `DimensionsApi.CreateDimension``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
-    // response from `CreateDimension`: Dimension
+    // response from `CreateDimension`: DimensionResponseDto
     fmt.Fprintf(os.Stdout, "Response from `DimensionsApi.CreateDimension`: %v\n", resp)
 }
 ```
@@ -60,13 +60,13 @@ Other parameters are passed through a pointer to a apiCreateDimensionRequest str
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **kableClientId** | **string** | Your client ID, found in the dashboard of your Kable account. | 
- **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments of your API. | 
- **createDimensionRequest** | [**CreateDimensionRequest**](CreateDimensionRequest.md) | Information about the dimension to create. | 
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
+ **createDimensionRequestDto** | [**CreateDimensionRequestDto**](CreateDimensionRequestDto.md) |  | 
 
 ### Return type
 
-[**Dimension**](Dimension.md)
+[**DimensionResponseDto**](DimensionResponseDto.md)
 
 ### Authorization
 
@@ -86,7 +86,7 @@ No authorization required
 
 > DeleteDimension(ctx, dimensionId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
 
-delete a dimension
+delete dimension
 
 
 
@@ -103,9 +103,9 @@ import (
 )
 
 func main() {
-    kableClientId := "kci_3c90e9ac92c64f31ae8ed84d21e18740" // string | Your client ID, found in the dashboard of your Kable account.
-    kableClientSecret := "sk_test.jI92Cbu0.XeHWdYM1VTLy4oLtGMw8wrmpt5q9d04n" // string | Your `LIVE` or `TEST` secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for `LIVE` and `TEST` environments of your API.
-    dimensionId := "dim_c5f32b8cd8934356b5167a3b2c6c6314" // string | The identifier for the dimension.
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+    dimensionId := "dim_c5f32b8cd8934356b5167a3b2c6c6314" // string | The dimension ID
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
@@ -123,7 +123,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**dimensionId** | **string** | The identifier for the dimension. | 
+**dimensionId** | **string** | The dimension ID | 
 
 ### Other Parameters
 
@@ -132,81 +132,13 @@ Other parameters are passed through a pointer to a apiDeleteDimensionRequest str
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **kableClientId** | **string** | Your client ID, found in the dashboard of your Kable account. | 
- **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments of your API. | 
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
 
 
 ### Return type
 
  (empty response body)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: Not defined
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## GetAllDimensions
-
-> []Dimension GetAllDimensions(ctx).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
-
-get all dimensions
-
-
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    kableClientId := "kci_3c90e9ac92c64f31ae8ed84d21e18740" // string | Your client ID, found in the dashboard of your Kable account.
-    kableClientSecret := "sk_test.jI92Cbu0.XeHWdYM1VTLy4oLtGMw8wrmpt5q9d04n" // string | Your `LIVE` or `TEST` secret key. Customers exist across all environments, so it does not matter which environment you use to fetch customers.
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.DimensionsApi.GetAllDimensions(context.Background()).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `DimensionsApi.GetAllDimensions``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `GetAllDimensions`: []Dimension
-    fmt.Fprintf(os.Stdout, "Response from `DimensionsApi.GetAllDimensions`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiGetAllDimensionsRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **kableClientId** | **string** | Your client ID, found in the dashboard of your Kable account. | 
- **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to fetch customers. | 
-
-### Return type
-
-[**[]Dimension**](Dimension.md)
 
 ### Authorization
 
@@ -224,7 +156,7 @@ No authorization required
 
 ## GetDimension
 
-> Dimension GetDimension(ctx, dimensionId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
+> DimensionResponseDto GetDimension(ctx, dimensionId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
 
 get dimension
 
@@ -243,9 +175,9 @@ import (
 )
 
 func main() {
-    kableClientId := "kci_3c90e9ac92c64f31ae8ed84d21e18740" // string | Your client ID, found in the dashboard of your Kable account.
-    kableClientSecret := "sk_test.jI92Cbu0.XeHWdYM1VTLy4oLtGMw8wrmpt5q9d04n" // string | Your `LIVE` or `TEST` secret key. Customers exist across all environments, so it does not matter which environment you use to fetch customers.
-    dimensionId := "userId" // string | The identifier for the dimension. You can pass in *either* the `dimensionId` (as defined by Kable) or the `key` (as defined by you).
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+    dimensionId := "dim_c5f32b8cd8934356b5167a3b2c6c6314" // string | The dimension ID
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
@@ -254,7 +186,7 @@ func main() {
         fmt.Fprintf(os.Stderr, "Error when calling `DimensionsApi.GetDimension``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
-    // response from `GetDimension`: Dimension
+    // response from `GetDimension`: DimensionResponseDto
     fmt.Fprintf(os.Stdout, "Response from `DimensionsApi.GetDimension`: %v\n", resp)
 }
 ```
@@ -265,7 +197,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**dimensionId** | **string** | The identifier for the dimension. You can pass in *either* the &#x60;dimensionId&#x60; (as defined by Kable) or the &#x60;key&#x60; (as defined by you). | 
+**dimensionId** | **string** | The dimension ID | 
 
 ### Other Parameters
 
@@ -274,13 +206,81 @@ Other parameters are passed through a pointer to a apiGetDimensionRequest struct
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **kableClientId** | **string** | Your client ID, found in the dashboard of your Kable account. | 
- **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to fetch customers. | 
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
 
 
 ### Return type
 
-[**Dimension**](Dimension.md)
+[**DimensionResponseDto**](DimensionResponseDto.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetDimensions
+
+> []DimensionResponseDto GetDimensions(ctx).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
+
+get all dimensions
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.DimensionsApi.GetDimensions(context.Background()).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `DimensionsApi.GetDimensions``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetDimensions`: []DimensionResponseDto
+    fmt.Fprintf(os.Stdout, "Response from `DimensionsApi.GetDimensions`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetDimensionsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
+
+### Return type
+
+[**[]DimensionResponseDto**](DimensionResponseDto.md)
 
 ### Authorization
 
@@ -298,9 +298,9 @@ No authorization required
 
 ## UpdateDimension
 
-> Dimension UpdateDimension(ctx, dimensionId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).UpdateDimensionRequest(updateDimensionRequest).Execute()
+> DimensionResponseDto UpdateDimension(ctx, dimensionId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).UpdateDimensionRequestDto(updateDimensionRequestDto).Execute()
 
-update a dimension
+update dimension
 
 
 
@@ -317,19 +317,19 @@ import (
 )
 
 func main() {
-    kableClientId := "kci_3c90e9ac92c64f31ae8ed84d21e18740" // string | Your client ID, found in the dashboard of your Kable account.
-    kableClientSecret := "sk_test.jI92Cbu0.XeHWdYM1VTLy4oLtGMw8wrmpt5q9d04n" // string | Your `LIVE` or `TEST` secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for `LIVE` and `TEST` environments of your API.
-    dimensionId := "dim_c5f32b8cd8934356b5167a3b2c6c6314" // string | The identifier for the dimension.
-    updateDimensionRequest := *openapiclient.NewUpdateDimensionRequest() // UpdateDimensionRequest | Information about the dimension to update. (optional)
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+    dimensionId := "dim_c5f32b8cd8934356b5167a3b2c6c6314" // string | The dimension ID
+    updateDimensionRequestDto := *openapiclient.NewUpdateDimensionRequestDto("User") // UpdateDimensionRequestDto | 
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.DimensionsApi.UpdateDimension(context.Background(), dimensionId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).UpdateDimensionRequest(updateDimensionRequest).Execute()
+    resp, r, err := apiClient.DimensionsApi.UpdateDimension(context.Background(), dimensionId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).UpdateDimensionRequestDto(updateDimensionRequestDto).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `DimensionsApi.UpdateDimension``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
-    // response from `UpdateDimension`: Dimension
+    // response from `UpdateDimension`: DimensionResponseDto
     fmt.Fprintf(os.Stdout, "Response from `DimensionsApi.UpdateDimension`: %v\n", resp)
 }
 ```
@@ -340,7 +340,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**dimensionId** | **string** | The identifier for the dimension. | 
+**dimensionId** | **string** | The dimension ID | 
 
 ### Other Parameters
 
@@ -349,14 +349,14 @@ Other parameters are passed through a pointer to a apiUpdateDimensionRequest str
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **kableClientId** | **string** | Your client ID, found in the dashboard of your Kable account. | 
- **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments of your API. | 
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
 
- **updateDimensionRequest** | [**UpdateDimensionRequest**](UpdateDimensionRequest.md) | Information about the dimension to update. | 
+ **updateDimensionRequestDto** | [**UpdateDimensionRequestDto**](UpdateDimensionRequestDto.md) |  | 
 
 ### Return type
 
-[**Dimension**](Dimension.md)
+[**DimensionResponseDto**](DimensionResponseDto.md)
 
 ### Authorization
 

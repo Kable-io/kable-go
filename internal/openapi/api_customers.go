@@ -1,9 +1,9 @@
 /*
 Kable API
 
-The Kable API allows developers to manage **customers** and **API keys** and record **events** about their API.   ## API Host and Environments  Kable is accessible in Live and Test environments for authentication and metering of client API requests. You will have separate API keys to access each environment.  You should only use Kable's Live environment for your own production data. All other configured environments should use Kable's Test environment.   ## API Protocols and Headers  All requests to the Kable API are made over HTTPS TLS v1.2+ to ensure security. Calls made over HTTP will fail. Any requests without proper authentication will also fail.  The Kable API uses standard JSON for requests and responses. Be sure to set both the `Content-Type` and `Accept` headers on each request to application/json.  Each Kable API response includes a `requestId` as the `X-REQUEST-ID` response header. The `requestId` is included regardless whether the API request succeeded or failed. You can use this requestId to help with debugging or when contacting support regarding a specific API call.   ## API Keys  There are two types of API keys on Kable.  ### Kable Keys Kable Keys are the keys you, the Kable customer, use to interact with Kable. These keys help us ensure that only you are interacting with Kable on your behalf. You can find your keys on the Company page of the dashboard after you sign up.  Kable Keys should be included in every request to the Kable API. You must provide your client ID as the `KABLE-CLIENT-ID` header and your secret key as the `KABLE-CLIENT-SECRET` header on each request to Kable. If you are using a language-specific Kable library, you will initialize the SDK using these keys.  ### Customer Keys Customer Keys are the keys your customers use to interact with your API. Customer Keys are authenticated by Kable when a customer makes a request to your API if you use Kable's authentication services. Customers must provide their client ID (defined as `clientId` when you create the customer) as the `X-CLIENT-ID` header and their secret key as the `X-API-KEY` header on each request to your API that Kable is to authenticate.   ## API Versioning  All Kable endpoints are versioned. After the host, each API can be found at `/api/vX/...` where X is the API version.  We strive to ensure that changes to the Kable API are backward compatible. Sometimes, though, we must break from older design paradigms to make the product better. When this happens, a new version of the API is released.  The current version of Kable is **v1**. 
+The Kable API allows developers to manage customers, plans, and usage data for their API.  ## API Host and Environments  Kable is accessible in Live and Test environments for authentication and metering of client API requests. You will have separate API keys to access each environment.  You should only use Kable's Live environment for your own production data. All other configured environments should use Kable's Test environment.  ## API Protocols and Headers  All requests to the Kable API are made over HTTPS TLS v1.2+ to ensure security. Calls made over HTTP will fail. Any requests without proper authentication will also fail.  The Kable API uses standard JSON for requests and responses. Be sure to set both the `Content-Type` and `Accept` headers on each request to `application/json`.  Each Kable API response includes a `requestId` as the `X-REQUEST-ID` response header. The `requestId` is included on most responses regardless whether the API request succeeded or failed. You can use this `requestId` to help with debugging or when contacting support regarding a specific API call.  ## API Versioning  All Kable endpoints are versioned. After the host, each API can be found at `/api/vX/...` where X is the API version.  We strive to ensure that changes to the Kable API are backward compatible. Sometimes, though, we must break from older design paradigms to make the product better. When this happens, a new version of the API is released.  The current version of the Kable API is `v1`.  
 
-API version: 1.2.1
+API version: 1.0.0
 Contact: contact@kable.io
 */
 
@@ -24,280 +24,6 @@ import (
 // CustomersApiService CustomersApi service
 type CustomersApiService service
 
-type ApiAddCustomerPaymentMethodRequest struct {
-	ctx context.Context
-	ApiService *CustomersApiService
-	kableClientId *string
-	kableClientSecret *string
-	customerId string
-	addCustomerPaymentMethodRequest *AddCustomerPaymentMethodRequest
-}
-
-// Your client ID, found in the dashboard of your Kable account.
-func (r ApiAddCustomerPaymentMethodRequest) KableClientId(kableClientId string) ApiAddCustomerPaymentMethodRequest {
-	r.kableClientId = &kableClientId
-	return r
-}
-
-// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments of your API.
-func (r ApiAddCustomerPaymentMethodRequest) KableClientSecret(kableClientSecret string) ApiAddCustomerPaymentMethodRequest {
-	r.kableClientSecret = &kableClientSecret
-	return r
-}
-
-// URLs to which to redirect after payment method details are stored in Stripe (and completion of Stripe Checkout Session).
-func (r ApiAddCustomerPaymentMethodRequest) AddCustomerPaymentMethodRequest(addCustomerPaymentMethodRequest AddCustomerPaymentMethodRequest) ApiAddCustomerPaymentMethodRequest {
-	r.addCustomerPaymentMethodRequest = &addCustomerPaymentMethodRequest
-	return r
-}
-
-func (r ApiAddCustomerPaymentMethodRequest) Execute() (*AddCustomerPaymentMethod200Response, *http.Response, error) {
-	return r.ApiService.AddCustomerPaymentMethodExecute(r)
-}
-
-/*
-AddCustomerPaymentMethod add a customer payment method
-
-Collect a payment method / credit card for a customer.
-
-Calling this method creates a short-lived [Stripe Checkout Session](https://stripe.com/payments/checkout) to allow your customers to enter payment method details. This API will return a Stripe URL to which you should redirect your customers to securely add their credit card information. Upon completion, Stripe will redirect back to the provided URLs.
-
-
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param customerId The identifier for the customer. You can pass in *either* the `customerId` (as defined by Kable) or the `clientId` (as defined by you).
- @return ApiAddCustomerPaymentMethodRequest
-*/
-func (a *CustomersApiService) AddCustomerPaymentMethod(ctx context.Context, customerId string) ApiAddCustomerPaymentMethodRequest {
-	return ApiAddCustomerPaymentMethodRequest{
-		ApiService: a,
-		ctx: ctx,
-		customerId: customerId,
-	}
-}
-
-// Execute executes the request
-//  @return AddCustomerPaymentMethod200Response
-func (a *CustomersApiService) AddCustomerPaymentMethodExecute(r ApiAddCustomerPaymentMethodRequest) (*AddCustomerPaymentMethod200Response, *http.Response, error) {
-	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *AddCustomerPaymentMethod200Response
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomersApiService.AddCustomerPaymentMethod")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/customers/{customerId}/payment_methods/add"
-	localVarPath = strings.Replace(localVarPath, "{"+"customerId"+"}", url.PathEscape(parameterToString(r.customerId, "")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-	if r.kableClientId == nil {
-		return localVarReturnValue, nil, reportError("kableClientId is required and must be specified")
-	}
-	if r.kableClientSecret == nil {
-		return localVarReturnValue, nil, reportError("kableClientSecret is required and must be specified")
-	}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"application/json"}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
-	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
-	// body params
-	localVarPostBody = r.addCustomerPaymentMethodRequest
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type ApiAddCustomerPlansRequest struct {
-	ctx context.Context
-	ApiService *CustomersApiService
-	kableClientId *string
-	kableClientSecret *string
-	customerId string
-	addCustomerPlansRequest *AddCustomerPlansRequest
-}
-
-// Your client ID, found in the dashboard of your Kable account.
-func (r ApiAddCustomerPlansRequest) KableClientId(kableClientId string) ApiAddCustomerPlansRequest {
-	r.kableClientId = &kableClientId
-	return r
-}
-
-// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments of your API.
-func (r ApiAddCustomerPlansRequest) KableClientSecret(kableClientSecret string) ApiAddCustomerPlansRequest {
-	r.kableClientSecret = &kableClientSecret
-	return r
-}
-
-// Plan ID(s) to add. You can provide either a singular &#x60;planId&#x60; or a list of &#x60;planIds&#x60;.
-func (r ApiAddCustomerPlansRequest) AddCustomerPlansRequest(addCustomerPlansRequest AddCustomerPlansRequest) ApiAddCustomerPlansRequest {
-	r.addCustomerPlansRequest = &addCustomerPlansRequest
-	return r
-}
-
-func (r ApiAddCustomerPlansRequest) Execute() (*Customer, *http.Response, error) {
-	return r.ApiService.AddCustomerPlansExecute(r)
-}
-
-/*
-AddCustomerPlans add a plan(s) to a customer
-
-Add a plan(s) to a customer.
-
-Note that customer plans can also be added and removed manually from within the Customers tab of your Kable dashboard.
-
-
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param customerId The identifier for the customer. You can pass in *either* the `customerId` (as defined by Kable) or the `clientId` (as defined by you).
- @return ApiAddCustomerPlansRequest
-*/
-func (a *CustomersApiService) AddCustomerPlans(ctx context.Context, customerId string) ApiAddCustomerPlansRequest {
-	return ApiAddCustomerPlansRequest{
-		ApiService: a,
-		ctx: ctx,
-		customerId: customerId,
-	}
-}
-
-// Execute executes the request
-//  @return Customer
-func (a *CustomersApiService) AddCustomerPlansExecute(r ApiAddCustomerPlansRequest) (*Customer, *http.Response, error) {
-	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *Customer
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomersApiService.AddCustomerPlans")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/customers/{customerId}/plans/add"
-	localVarPath = strings.Replace(localVarPath, "{"+"customerId"+"}", url.PathEscape(parameterToString(r.customerId, "")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-	if r.kableClientId == nil {
-		return localVarReturnValue, nil, reportError("kableClientId is required and must be specified")
-	}
-	if r.kableClientSecret == nil {
-		return localVarReturnValue, nil, reportError("kableClientSecret is required and must be specified")
-	}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"application/json"}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
-	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
-	// body params
-	localVarPostBody = r.addCustomerPlansRequest
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
 type ApiCancelCustomerRequest struct {
 	ctx context.Context
 	ApiService *CustomersApiService
@@ -306,30 +32,29 @@ type ApiCancelCustomerRequest struct {
 	customerId string
 }
 
-// Your client ID, found in the dashboard of your Kable account.
+// Your Kable client ID, found in the dashboard of your Kable account.
 func (r ApiCancelCustomerRequest) KableClientId(kableClientId string) ApiCancelCustomerRequest {
 	r.kableClientId = &kableClientId
 	return r
 }
 
-// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments of your API.
+// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key.
 func (r ApiCancelCustomerRequest) KableClientSecret(kableClientSecret string) ApiCancelCustomerRequest {
 	r.kableClientSecret = &kableClientSecret
 	return r
 }
 
-func (r ApiCancelCustomerRequest) Execute() (*Customer, *http.Response, error) {
+func (r ApiCancelCustomerRequest) Execute() (*CustomerResponseDto, *http.Response, error) {
 	return r.ApiService.CancelCustomerExecute(r)
 }
 
 /*
 CancelCustomer cancel a customer
 
-Cancelling a customer will update its status to `"CANCELLED"` and terminate all future billing.
-
+Cancelling a customer will update its status to `CANCELLED` and terminate all future billing.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param customerId The identifier for the customer. You can pass in *either* the `customerId` (as defined by Kable) or the `clientId` (as defined by you).
+ @param customerId The customer ID
  @return ApiCancelCustomerRequest
 */
 func (a *CustomersApiService) CancelCustomer(ctx context.Context, customerId string) ApiCancelCustomerRequest {
@@ -341,13 +66,13 @@ func (a *CustomersApiService) CancelCustomer(ctx context.Context, customerId str
 }
 
 // Execute executes the request
-//  @return Customer
-func (a *CustomersApiService) CancelCustomerExecute(r ApiCancelCustomerRequest) (*Customer, *http.Response, error) {
+//  @return CustomerResponseDto
+func (a *CustomersApiService) CancelCustomerExecute(r ApiCancelCustomerRequest) (*CustomerResponseDto, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *Customer
+		localVarReturnValue  *CustomerResponseDto
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomersApiService.CancelCustomer")
@@ -355,7 +80,7 @@ func (a *CustomersApiService) CancelCustomerExecute(r ApiCancelCustomerRequest) 
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/customers/{customerId}/cancel"
+	localVarPath := localBasePath + "/api/v1/customers/{customerId}/cancel"
 	localVarPath = strings.Replace(localVarPath, "{"+"customerId"+"}", url.PathEscape(parameterToString(r.customerId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
@@ -409,6 +134,25 @@ func (a *CustomersApiService) CancelCustomerExecute(r ApiCancelCustomerRequest) 
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorMessage401
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorMessage500
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -429,20 +173,31 @@ type ApiCreateCustomerRequest struct {
 	ApiService *CustomersApiService
 	kableClientId *string
 	kableClientSecret *string
-	keys *bool
+	createCustomerRequestDto *CreateCustomerRequestDto
 	stripe *bool
-	createCustomerRequest *CreateCustomerRequest
+	keys *bool
 }
 
-// Your client ID, found in the dashboard of your Kable account.
+// Your Kable client ID, found in the dashboard of your Kable account.
 func (r ApiCreateCustomerRequest) KableClientId(kableClientId string) ApiCreateCustomerRequest {
 	r.kableClientId = &kableClientId
 	return r
 }
 
-// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. You will be able to record usage data for each customer separately in &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments.
+// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key.
 func (r ApiCreateCustomerRequest) KableClientSecret(kableClientSecret string) ApiCreateCustomerRequest {
 	r.kableClientSecret = &kableClientSecret
+	return r
+}
+
+func (r ApiCreateCustomerRequest) CreateCustomerRequestDto(createCustomerRequestDto CreateCustomerRequestDto) ApiCreateCustomerRequest {
+	r.createCustomerRequestDto = &createCustomerRequestDto
+	return r
+}
+
+// When true, Kable will also create and attach a Stripe customer.  If your account is not connected to Stripe, the request will fail. If you provide a &#x60;stripeCustomerId&#x60; in the request body, this query parameter will be ignored.
+func (r ApiCreateCustomerRequest) Stripe(stripe bool) ApiCreateCustomerRequest {
+	r.stripe = &stripe
 	return r
 }
 
@@ -452,31 +207,18 @@ func (r ApiCreateCustomerRequest) Keys(keys bool) ApiCreateCustomerRequest {
 	return r
 }
 
-// When true, Kable will also create and attach a Stripe customer.  If your account is not connected to Stripe, the request will fail. If you provide a &#x60;stripeCustomerId&#x60; in the request body, this query parameter will be ignored. 
-func (r ApiCreateCustomerRequest) Stripe(stripe bool) ApiCreateCustomerRequest {
-	r.stripe = &stripe
-	return r
-}
-
-// Information about the customer you are creating.  Client IDs should correspond to identifiers in your own application. If you are migrating from another authentication system, this is often the same &#x60;clientId&#x60; that the customer was using before. Each client ID must be unique, as Kable uses this field to uniquely identify customers. Company names can be edited later in the dashboard, but client IDs cannot be changed. 
-func (r ApiCreateCustomerRequest) CreateCustomerRequest(createCustomerRequest CreateCustomerRequest) ApiCreateCustomerRequest {
-	r.createCustomerRequest = &createCustomerRequest
-	return r
-}
-
-func (r ApiCreateCustomerRequest) Execute() (*CreateCustomer200Response, *http.Response, error) {
+func (r ApiCreateCustomerRequest) Execute() (*CustomerResponseWithKeysDto, *http.Response, error) {
 	return r.ApiService.CreateCustomerExecute(r)
 }
 
 /*
-CreateCustomer create a customer
+CreateCustomer create customer
 
 Create a new customer. Call this when a new customer signs up for your API.
 
 You can this API in the `LIVE` or `TEST` environment and the outcome will be the same. Customers exist across environments. Handling of subsequent customer requests in a given environment are governed by the environment-specific keys (`LIVE` or `TEST`) they use to authenticate.
 
 Note that clients can also be created manually from within the Customers tab of your Kable dashboard.
-
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @return ApiCreateCustomerRequest
@@ -489,13 +231,13 @@ func (a *CustomersApiService) CreateCustomer(ctx context.Context) ApiCreateCusto
 }
 
 // Execute executes the request
-//  @return CreateCustomer200Response
-func (a *CustomersApiService) CreateCustomerExecute(r ApiCreateCustomerRequest) (*CreateCustomer200Response, *http.Response, error) {
+//  @return CustomerResponseWithKeysDto
+func (a *CustomersApiService) CreateCustomerExecute(r ApiCreateCustomerRequest) (*CustomerResponseWithKeysDto, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *CreateCustomer200Response
+		localVarReturnValue  *CustomerResponseWithKeysDto
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomersApiService.CreateCustomer")
@@ -503,7 +245,7 @@ func (a *CustomersApiService) CreateCustomerExecute(r ApiCreateCustomerRequest) 
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/customers/create"
+	localVarPath := localBasePath + "/api/v1/customers/create"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -514,12 +256,15 @@ func (a *CustomersApiService) CreateCustomerExecute(r ApiCreateCustomerRequest) 
 	if r.kableClientSecret == nil {
 		return localVarReturnValue, nil, reportError("kableClientSecret is required and must be specified")
 	}
-
-	if r.keys != nil {
-		localVarQueryParams.Add("keys", parameterToString(*r.keys, ""))
+	if r.createCustomerRequestDto == nil {
+		return localVarReturnValue, nil, reportError("createCustomerRequestDto is required and must be specified")
 	}
+
 	if r.stripe != nil {
 		localVarQueryParams.Add("stripe", parameterToString(*r.stripe, ""))
+	}
+	if r.keys != nil {
+		localVarQueryParams.Add("keys", parameterToString(*r.keys, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -541,7 +286,7 @@ func (a *CustomersApiService) CreateCustomerExecute(r ApiCreateCustomerRequest) 
 	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
 	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
 	// body params
-	localVarPostBody = r.createCustomerRequest
+	localVarPostBody = r.createCustomerRequestDto
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -563,6 +308,651 @@ func (a *CustomersApiService) CreateCustomerExecute(r ApiCreateCustomerRequest) 
 		newErr := &GenericOpenAPIError{
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorMessage401
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorMessage500
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiCreateCustomerBundleRequest struct {
+	ctx context.Context
+	ApiService *CustomersApiService
+	kableClientId *string
+	kableClientSecret *string
+	customerId string
+	createCustomerBundleRequestDto *CreateCustomerBundleRequestDto
+}
+
+// Your Kable client ID, found in the dashboard of your Kable account.
+func (r ApiCreateCustomerBundleRequest) KableClientId(kableClientId string) ApiCreateCustomerBundleRequest {
+	r.kableClientId = &kableClientId
+	return r
+}
+
+// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key.
+func (r ApiCreateCustomerBundleRequest) KableClientSecret(kableClientSecret string) ApiCreateCustomerBundleRequest {
+	r.kableClientSecret = &kableClientSecret
+	return r
+}
+
+func (r ApiCreateCustomerBundleRequest) CreateCustomerBundleRequestDto(createCustomerBundleRequestDto CreateCustomerBundleRequestDto) ApiCreateCustomerBundleRequest {
+	r.createCustomerBundleRequestDto = &createCustomerBundleRequestDto
+	return r
+}
+
+func (r ApiCreateCustomerBundleRequest) Execute() (*CustomerResponseDto, *http.Response, error) {
+	return r.ApiService.CreateCustomerBundleExecute(r)
+}
+
+/*
+CreateCustomerBundle add customer bundle
+
+Add a bundle to a customer.
+
+Note that customer bundles can also be added and removed manually from within the Customers tab of your Kable dashboard.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param customerId The customer ID
+ @return ApiCreateCustomerBundleRequest
+*/
+func (a *CustomersApiService) CreateCustomerBundle(ctx context.Context, customerId string) ApiCreateCustomerBundleRequest {
+	return ApiCreateCustomerBundleRequest{
+		ApiService: a,
+		ctx: ctx,
+		customerId: customerId,
+	}
+}
+
+// Execute executes the request
+//  @return CustomerResponseDto
+func (a *CustomersApiService) CreateCustomerBundleExecute(r ApiCreateCustomerBundleRequest) (*CustomerResponseDto, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *CustomerResponseDto
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomersApiService.CreateCustomerBundle")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/customers/{customerId}/bundles/add"
+	localVarPath = strings.Replace(localVarPath, "{"+"customerId"+"}", url.PathEscape(parameterToString(r.customerId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.kableClientId == nil {
+		return localVarReturnValue, nil, reportError("kableClientId is required and must be specified")
+	}
+	if r.kableClientSecret == nil {
+		return localVarReturnValue, nil, reportError("kableClientSecret is required and must be specified")
+	}
+	if r.createCustomerBundleRequestDto == nil {
+		return localVarReturnValue, nil, reportError("createCustomerBundleRequestDto is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
+	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
+	// body params
+	localVarPostBody = r.createCustomerBundleRequestDto
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorMessage401
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorMessage500
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiCreateCustomerCreditGrantRequest struct {
+	ctx context.Context
+	ApiService *CustomersApiService
+	kableClientId *string
+	kableClientSecret *string
+	customerId string
+	createCreditGrantRequestDto *CreateCreditGrantRequestDto
+}
+
+// Your Kable client ID, found in the dashboard of your Kable account.
+func (r ApiCreateCustomerCreditGrantRequest) KableClientId(kableClientId string) ApiCreateCustomerCreditGrantRequest {
+	r.kableClientId = &kableClientId
+	return r
+}
+
+// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key.
+func (r ApiCreateCustomerCreditGrantRequest) KableClientSecret(kableClientSecret string) ApiCreateCustomerCreditGrantRequest {
+	r.kableClientSecret = &kableClientSecret
+	return r
+}
+
+func (r ApiCreateCustomerCreditGrantRequest) CreateCreditGrantRequestDto(createCreditGrantRequestDto CreateCreditGrantRequestDto) ApiCreateCustomerCreditGrantRequest {
+	r.createCreditGrantRequestDto = &createCreditGrantRequestDto
+	return r
+}
+
+func (r ApiCreateCustomerCreditGrantRequest) Execute() (*CreditGrantResponseDto, *http.Response, error) {
+	return r.ApiService.CreateCustomerCreditGrantExecute(r)
+}
+
+/*
+CreateCustomerCreditGrant create customer credit grant
+
+Add a credit grant to a customer.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param customerId The customer ID
+ @return ApiCreateCustomerCreditGrantRequest
+*/
+func (a *CustomersApiService) CreateCustomerCreditGrant(ctx context.Context, customerId string) ApiCreateCustomerCreditGrantRequest {
+	return ApiCreateCustomerCreditGrantRequest{
+		ApiService: a,
+		ctx: ctx,
+		customerId: customerId,
+	}
+}
+
+// Execute executes the request
+//  @return CreditGrantResponseDto
+func (a *CustomersApiService) CreateCustomerCreditGrantExecute(r ApiCreateCustomerCreditGrantRequest) (*CreditGrantResponseDto, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *CreditGrantResponseDto
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomersApiService.CreateCustomerCreditGrant")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/customers/{customerId}/credits/create"
+	localVarPath = strings.Replace(localVarPath, "{"+"customerId"+"}", url.PathEscape(parameterToString(r.customerId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.kableClientId == nil {
+		return localVarReturnValue, nil, reportError("kableClientId is required and must be specified")
+	}
+	if r.kableClientSecret == nil {
+		return localVarReturnValue, nil, reportError("kableClientSecret is required and must be specified")
+	}
+	if r.createCreditGrantRequestDto == nil {
+		return localVarReturnValue, nil, reportError("createCreditGrantRequestDto is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
+	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
+	// body params
+	localVarPostBody = r.createCreditGrantRequestDto
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorMessage401
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorMessage500
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiCreateCustomerPaymentMethodRequest struct {
+	ctx context.Context
+	ApiService *CustomersApiService
+	kableClientId *string
+	kableClientSecret *string
+	customerId string
+	addCustomerPaymentMethodRequestDto *AddCustomerPaymentMethodRequestDto
+}
+
+// Your Kable client ID, found in the dashboard of your Kable account.
+func (r ApiCreateCustomerPaymentMethodRequest) KableClientId(kableClientId string) ApiCreateCustomerPaymentMethodRequest {
+	r.kableClientId = &kableClientId
+	return r
+}
+
+// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key.
+func (r ApiCreateCustomerPaymentMethodRequest) KableClientSecret(kableClientSecret string) ApiCreateCustomerPaymentMethodRequest {
+	r.kableClientSecret = &kableClientSecret
+	return r
+}
+
+func (r ApiCreateCustomerPaymentMethodRequest) AddCustomerPaymentMethodRequestDto(addCustomerPaymentMethodRequestDto AddCustomerPaymentMethodRequestDto) ApiCreateCustomerPaymentMethodRequest {
+	r.addCustomerPaymentMethodRequestDto = &addCustomerPaymentMethodRequestDto
+	return r
+}
+
+func (r ApiCreateCustomerPaymentMethodRequest) Execute() (*AddCustomerPaymentMethodResponseDto, *http.Response, error) {
+	return r.ApiService.CreateCustomerPaymentMethodExecute(r)
+}
+
+/*
+CreateCustomerPaymentMethod add customer payment method
+
+Collect a payment method / credit card for a customer.
+
+Calling this method creates a short-lived [Stripe Checkout Session](https://stripe.com/payments/checkout) to allow your customers to enter payment method details. This API will return a Stripe URL to which you should redirect your customers to securely add their credit card information. Upon completion, Stripe will redirect back to the provided URLs.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param customerId The customer ID
+ @return ApiCreateCustomerPaymentMethodRequest
+*/
+func (a *CustomersApiService) CreateCustomerPaymentMethod(ctx context.Context, customerId string) ApiCreateCustomerPaymentMethodRequest {
+	return ApiCreateCustomerPaymentMethodRequest{
+		ApiService: a,
+		ctx: ctx,
+		customerId: customerId,
+	}
+}
+
+// Execute executes the request
+//  @return AddCustomerPaymentMethodResponseDto
+func (a *CustomersApiService) CreateCustomerPaymentMethodExecute(r ApiCreateCustomerPaymentMethodRequest) (*AddCustomerPaymentMethodResponseDto, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *AddCustomerPaymentMethodResponseDto
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomersApiService.CreateCustomerPaymentMethod")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/customers/{customerId}/payment_methods/add"
+	localVarPath = strings.Replace(localVarPath, "{"+"customerId"+"}", url.PathEscape(parameterToString(r.customerId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.kableClientId == nil {
+		return localVarReturnValue, nil, reportError("kableClientId is required and must be specified")
+	}
+	if r.kableClientSecret == nil {
+		return localVarReturnValue, nil, reportError("kableClientSecret is required and must be specified")
+	}
+	if r.addCustomerPaymentMethodRequestDto == nil {
+		return localVarReturnValue, nil, reportError("addCustomerPaymentMethodRequestDto is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
+	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
+	// body params
+	localVarPostBody = r.addCustomerPaymentMethodRequestDto
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorMessage401
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorMessage500
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiCreateCustomerPlanRequest struct {
+	ctx context.Context
+	ApiService *CustomersApiService
+	kableClientId *string
+	kableClientSecret *string
+	customerId string
+	createCustomerPlansRequestDto *CreateCustomerPlansRequestDto
+}
+
+// Your Kable client ID, found in the dashboard of your Kable account.
+func (r ApiCreateCustomerPlanRequest) KableClientId(kableClientId string) ApiCreateCustomerPlanRequest {
+	r.kableClientId = &kableClientId
+	return r
+}
+
+// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key.
+func (r ApiCreateCustomerPlanRequest) KableClientSecret(kableClientSecret string) ApiCreateCustomerPlanRequest {
+	r.kableClientSecret = &kableClientSecret
+	return r
+}
+
+func (r ApiCreateCustomerPlanRequest) CreateCustomerPlansRequestDto(createCustomerPlansRequestDto CreateCustomerPlansRequestDto) ApiCreateCustomerPlanRequest {
+	r.createCustomerPlansRequestDto = &createCustomerPlansRequestDto
+	return r
+}
+
+func (r ApiCreateCustomerPlanRequest) Execute() (*CustomerResponseDto, *http.Response, error) {
+	return r.ApiService.CreateCustomerPlanExecute(r)
+}
+
+/*
+CreateCustomerPlan add customer plan(s)
+
+Add a plan(s) to a customer.
+
+Note that customer plans can also be added and removed manually from within the Customers tab of your Kable dashboard.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param customerId The customer ID
+ @return ApiCreateCustomerPlanRequest
+*/
+func (a *CustomersApiService) CreateCustomerPlan(ctx context.Context, customerId string) ApiCreateCustomerPlanRequest {
+	return ApiCreateCustomerPlanRequest{
+		ApiService: a,
+		ctx: ctx,
+		customerId: customerId,
+	}
+}
+
+// Execute executes the request
+//  @return CustomerResponseDto
+func (a *CustomersApiService) CreateCustomerPlanExecute(r ApiCreateCustomerPlanRequest) (*CustomerResponseDto, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *CustomerResponseDto
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomersApiService.CreateCustomerPlan")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/customers/{customerId}/plans/add"
+	localVarPath = strings.Replace(localVarPath, "{"+"customerId"+"}", url.PathEscape(parameterToString(r.customerId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.kableClientId == nil {
+		return localVarReturnValue, nil, reportError("kableClientId is required and must be specified")
+	}
+	if r.kableClientSecret == nil {
+		return localVarReturnValue, nil, reportError("kableClientSecret is required and must be specified")
+	}
+	if r.createCustomerPlansRequestDto == nil {
+		return localVarReturnValue, nil, reportError("createCustomerPlansRequestDto is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
+	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
+	// body params
+	localVarPostBody = r.createCustomerPlansRequestDto
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorMessage401
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorMessage500
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -587,13 +977,13 @@ type ApiDeleteCustomerRequest struct {
 	customerId string
 }
 
-// Your client ID, found in the dashboard of your Kable account.
+// Your Kable client ID, found in the dashboard of your Kable account.
 func (r ApiDeleteCustomerRequest) KableClientId(kableClientId string) ApiDeleteCustomerRequest {
 	r.kableClientId = &kableClientId
 	return r
 }
 
-// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments of your API.
+// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key.
 func (r ApiDeleteCustomerRequest) KableClientSecret(kableClientSecret string) ApiDeleteCustomerRequest {
 	r.kableClientSecret = &kableClientSecret
 	return r
@@ -604,13 +994,12 @@ func (r ApiDeleteCustomerRequest) Execute() (*http.Response, error) {
 }
 
 /*
-DeleteCustomer delete a customer
+DeleteCustomer delete customer
 
 Deleting a customer will erase all record of the customer identity in Kable. This action is irreversible, and should only be used for the purposes of GDPR / CCPA.
 
-
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param customerId The identifier for the customer. You can pass in *either* the `customerId` (as defined by Kable) or the `clientId` (as defined by you).
+ @param customerId The customer ID
  @return ApiDeleteCustomerRequest
 */
 func (a *CustomersApiService) DeleteCustomer(ctx context.Context, customerId string) ApiDeleteCustomerRequest {
@@ -634,7 +1023,7 @@ func (a *CustomersApiService) DeleteCustomerExecute(r ApiDeleteCustomerRequest) 
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/customers/{customerId}/delete"
+	localVarPath := localBasePath + "/api/v1/customers/{customerId}/delete"
 	localVarPath = strings.Replace(localVarPath, "{"+"customerId"+"}", url.PathEscape(parameterToString(r.customerId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
@@ -657,7 +1046,7 @@ func (a *CustomersApiService) DeleteCustomerExecute(r ApiDeleteCustomerRequest) 
 	}
 
 	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{}
+	localVarHTTPHeaderAccepts := []string{"application/json"}
 
 	// set Accept header
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
@@ -688,132 +1077,29 @@ func (a *CustomersApiService) DeleteCustomerExecute(r ApiDeleteCustomerRequest) 
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorMessage401
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorMessage500
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
 		return localVarHTTPResponse, newErr
 	}
 
 	return localVarHTTPResponse, nil
-}
-
-type ApiGetAllCustomersRequest struct {
-	ctx context.Context
-	ApiService *CustomersApiService
-	kableClientId *string
-	kableClientSecret *string
-}
-
-// Your client ID, found in the dashboard of your Kable account.
-func (r ApiGetAllCustomersRequest) KableClientId(kableClientId string) ApiGetAllCustomersRequest {
-	r.kableClientId = &kableClientId
-	return r
-}
-
-// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to fetch customers.
-func (r ApiGetAllCustomersRequest) KableClientSecret(kableClientSecret string) ApiGetAllCustomersRequest {
-	r.kableClientSecret = &kableClientSecret
-	return r
-}
-
-func (r ApiGetAllCustomersRequest) Execute() ([]Customer, *http.Response, error) {
-	return r.ApiService.GetAllCustomersExecute(r)
-}
-
-/*
-GetAllCustomers get all customers
-
-Retrieve all customers.
-
-
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiGetAllCustomersRequest
-*/
-func (a *CustomersApiService) GetAllCustomers(ctx context.Context) ApiGetAllCustomersRequest {
-	return ApiGetAllCustomersRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-// Execute executes the request
-//  @return []Customer
-func (a *CustomersApiService) GetAllCustomersExecute(r ApiGetAllCustomersRequest) ([]Customer, *http.Response, error) {
-	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []Customer
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomersApiService.GetAllCustomers")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/customers"
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-	if r.kableClientId == nil {
-		return localVarReturnValue, nil, reportError("kableClientId is required and must be specified")
-	}
-	if r.kableClientSecret == nil {
-		return localVarReturnValue, nil, reportError("kableClientSecret is required and must be specified")
-	}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
-	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
 type ApiGetCustomerRequest struct {
@@ -824,19 +1110,19 @@ type ApiGetCustomerRequest struct {
 	customerId string
 }
 
-// Your client ID, found in the dashboard of your Kable account.
+// Your Kable client ID, found in the dashboard of your Kable account.
 func (r ApiGetCustomerRequest) KableClientId(kableClientId string) ApiGetCustomerRequest {
 	r.kableClientId = &kableClientId
 	return r
 }
 
-// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to fetch customers.
+// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key.
 func (r ApiGetCustomerRequest) KableClientSecret(kableClientSecret string) ApiGetCustomerRequest {
 	r.kableClientSecret = &kableClientSecret
 	return r
 }
 
-func (r ApiGetCustomerRequest) Execute() (*Customer, *http.Response, error) {
+func (r ApiGetCustomerRequest) Execute() (*CustomerResponseDto, *http.Response, error) {
 	return r.ApiService.GetCustomerExecute(r)
 }
 
@@ -845,9 +1131,8 @@ GetCustomer get customer
 
 Retrieve a customer.
 
-
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param customerId The identifier for the customer. You can pass in *either* the `customerId` (as defined by Kable) or the `clientId` (as defined by you).
+ @param customerId The customer ID
  @return ApiGetCustomerRequest
 */
 func (a *CustomersApiService) GetCustomer(ctx context.Context, customerId string) ApiGetCustomerRequest {
@@ -859,13 +1144,13 @@ func (a *CustomersApiService) GetCustomer(ctx context.Context, customerId string
 }
 
 // Execute executes the request
-//  @return Customer
-func (a *CustomersApiService) GetCustomerExecute(r ApiGetCustomerRequest) (*Customer, *http.Response, error) {
+//  @return CustomerResponseDto
+func (a *CustomersApiService) GetCustomerExecute(r ApiGetCustomerRequest) (*CustomerResponseDto, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *Customer
+		localVarReturnValue  *CustomerResponseDto
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomersApiService.GetCustomer")
@@ -873,7 +1158,7 @@ func (a *CustomersApiService) GetCustomerExecute(r ApiGetCustomerRequest) (*Cust
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/customers/{customerId}"
+	localVarPath := localBasePath + "/api/v1/customers/{customerId}"
 	localVarPath = strings.Replace(localVarPath, "{"+"customerId"+"}", url.PathEscape(parameterToString(r.customerId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
@@ -927,6 +1212,25 @@ func (a *CustomersApiService) GetCustomerExecute(r ApiGetCustomerRequest) (*Cust
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorMessage401
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorMessage500
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -942,51 +1246,41 @@ func (a *CustomersApiService) GetCustomerExecute(r ApiGetCustomerRequest) (*Cust
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiRemoveCustomerPlansRequest struct {
+type ApiGetCustomerCreditBalanceRequest struct {
 	ctx context.Context
 	ApiService *CustomersApiService
 	kableClientId *string
 	kableClientSecret *string
 	customerId string
-	addCustomerPlansRequest *AddCustomerPlansRequest
 }
 
-// Your client ID, found in the dashboard of your Kable account.
-func (r ApiRemoveCustomerPlansRequest) KableClientId(kableClientId string) ApiRemoveCustomerPlansRequest {
+// Your Kable client ID, found in the dashboard of your Kable account.
+func (r ApiGetCustomerCreditBalanceRequest) KableClientId(kableClientId string) ApiGetCustomerCreditBalanceRequest {
 	r.kableClientId = &kableClientId
 	return r
 }
 
-// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments of your API.
-func (r ApiRemoveCustomerPlansRequest) KableClientSecret(kableClientSecret string) ApiRemoveCustomerPlansRequest {
+// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key.
+func (r ApiGetCustomerCreditBalanceRequest) KableClientSecret(kableClientSecret string) ApiGetCustomerCreditBalanceRequest {
 	r.kableClientSecret = &kableClientSecret
 	return r
 }
 
-// Plan ID(s) to remove. You can provide either a singular &#x60;planId&#x60; or a list of &#x60;planIds&#x60;.
-func (r ApiRemoveCustomerPlansRequest) AddCustomerPlansRequest(addCustomerPlansRequest AddCustomerPlansRequest) ApiRemoveCustomerPlansRequest {
-	r.addCustomerPlansRequest = &addCustomerPlansRequest
-	return r
-}
-
-func (r ApiRemoveCustomerPlansRequest) Execute() (*Customer, *http.Response, error) {
-	return r.ApiService.RemoveCustomerPlansExecute(r)
+func (r ApiGetCustomerCreditBalanceRequest) Execute() (*CreditBalanceResponseDto, *http.Response, error) {
+	return r.ApiService.GetCustomerCreditBalanceExecute(r)
 }
 
 /*
-RemoveCustomerPlans remove a plan(s) from a customer
+GetCustomerCreditBalance get customer credit balance
 
-Remove a plan(s) from a customer.
-
-Note that customer plans can also be added and removed manually from within the Customers tab of your Kable dashboard.
-
+Get a customer's available credit balance.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param customerId The identifier for the customer. You can pass in *either* the `customerId` (as defined by Kable) or the `clientId` (as defined by you).
- @return ApiRemoveCustomerPlansRequest
+ @param customerId The customer ID
+ @return ApiGetCustomerCreditBalanceRequest
 */
-func (a *CustomersApiService) RemoveCustomerPlans(ctx context.Context, customerId string) ApiRemoveCustomerPlansRequest {
-	return ApiRemoveCustomerPlansRequest{
+func (a *CustomersApiService) GetCustomerCreditBalance(ctx context.Context, customerId string) ApiGetCustomerCreditBalanceRequest {
+	return ApiGetCustomerCreditBalanceRequest{
 		ApiService: a,
 		ctx: ctx,
 		customerId: customerId,
@@ -994,21 +1288,21 @@ func (a *CustomersApiService) RemoveCustomerPlans(ctx context.Context, customerI
 }
 
 // Execute executes the request
-//  @return Customer
-func (a *CustomersApiService) RemoveCustomerPlansExecute(r ApiRemoveCustomerPlansRequest) (*Customer, *http.Response, error) {
+//  @return CreditBalanceResponseDto
+func (a *CustomersApiService) GetCustomerCreditBalanceExecute(r ApiGetCustomerCreditBalanceRequest) (*CreditBalanceResponseDto, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
+		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *Customer
+		localVarReturnValue  *CreditBalanceResponseDto
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomersApiService.RemoveCustomerPlans")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomersApiService.GetCustomerCreditBalance")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/customers/{customerId}/plans/remove"
+	localVarPath := localBasePath + "/api/v1/customers/{customerId}/credits/balance"
 	localVarPath = strings.Replace(localVarPath, "{"+"customerId"+"}", url.PathEscape(parameterToString(r.customerId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
@@ -1019,6 +1313,593 @@ func (a *CustomersApiService) RemoveCustomerPlansExecute(r ApiRemoveCustomerPlan
 	}
 	if r.kableClientSecret == nil {
 		return localVarReturnValue, nil, reportError("kableClientSecret is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
+	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorMessage401
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorMessage500
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetCustomerEntitlementRequest struct {
+	ctx context.Context
+	ApiService *CustomersApiService
+	kableClientId *string
+	kableClientSecret *string
+	customerId string
+	entitlementId string
+}
+
+// Your Kable client ID, found in the dashboard of your Kable account.
+func (r ApiGetCustomerEntitlementRequest) KableClientId(kableClientId string) ApiGetCustomerEntitlementRequest {
+	r.kableClientId = &kableClientId
+	return r
+}
+
+// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key.
+func (r ApiGetCustomerEntitlementRequest) KableClientSecret(kableClientSecret string) ApiGetCustomerEntitlementRequest {
+	r.kableClientSecret = &kableClientSecret
+	return r
+}
+
+func (r ApiGetCustomerEntitlementRequest) Execute() (*CustomerEntitlementResponseDto, *http.Response, error) {
+	return r.ApiService.GetCustomerEntitlementExecute(r)
+}
+
+/*
+GetCustomerEntitlement get customer entitlement
+
+Retrieve a customer entitlement.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param customerId The customer ID
+ @param entitlementId The entitlement ID
+ @return ApiGetCustomerEntitlementRequest
+*/
+func (a *CustomersApiService) GetCustomerEntitlement(ctx context.Context, customerId string, entitlementId string) ApiGetCustomerEntitlementRequest {
+	return ApiGetCustomerEntitlementRequest{
+		ApiService: a,
+		ctx: ctx,
+		customerId: customerId,
+		entitlementId: entitlementId,
+	}
+}
+
+// Execute executes the request
+//  @return CustomerEntitlementResponseDto
+func (a *CustomersApiService) GetCustomerEntitlementExecute(r ApiGetCustomerEntitlementRequest) (*CustomerEntitlementResponseDto, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *CustomerEntitlementResponseDto
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomersApiService.GetCustomerEntitlement")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/customers/{customerId}/entitlements/{entitlementId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"customerId"+"}", url.PathEscape(parameterToString(r.customerId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"entitlementId"+"}", url.PathEscape(parameterToString(r.entitlementId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.kableClientId == nil {
+		return localVarReturnValue, nil, reportError("kableClientId is required and must be specified")
+	}
+	if r.kableClientSecret == nil {
+		return localVarReturnValue, nil, reportError("kableClientSecret is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
+	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorMessage401
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorMessage500
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetCustomerEntitlementsRequest struct {
+	ctx context.Context
+	ApiService *CustomersApiService
+	kableClientId *string
+	kableClientSecret *string
+	customerId string
+}
+
+// Your Kable client ID, found in the dashboard of your Kable account.
+func (r ApiGetCustomerEntitlementsRequest) KableClientId(kableClientId string) ApiGetCustomerEntitlementsRequest {
+	r.kableClientId = &kableClientId
+	return r
+}
+
+// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key.
+func (r ApiGetCustomerEntitlementsRequest) KableClientSecret(kableClientSecret string) ApiGetCustomerEntitlementsRequest {
+	r.kableClientSecret = &kableClientSecret
+	return r
+}
+
+func (r ApiGetCustomerEntitlementsRequest) Execute() ([]CustomerEntitlementResponseDto, *http.Response, error) {
+	return r.ApiService.GetCustomerEntitlementsExecute(r)
+}
+
+/*
+GetCustomerEntitlements get all customer entitlements
+
+Retrieve all customer entitlements, inferred from the customer's plans.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param customerId The customer ID
+ @return ApiGetCustomerEntitlementsRequest
+*/
+func (a *CustomersApiService) GetCustomerEntitlements(ctx context.Context, customerId string) ApiGetCustomerEntitlementsRequest {
+	return ApiGetCustomerEntitlementsRequest{
+		ApiService: a,
+		ctx: ctx,
+		customerId: customerId,
+	}
+}
+
+// Execute executes the request
+//  @return []CustomerEntitlementResponseDto
+func (a *CustomersApiService) GetCustomerEntitlementsExecute(r ApiGetCustomerEntitlementsRequest) ([]CustomerEntitlementResponseDto, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  []CustomerEntitlementResponseDto
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomersApiService.GetCustomerEntitlements")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/customers/{customerId}/entitlements"
+	localVarPath = strings.Replace(localVarPath, "{"+"customerId"+"}", url.PathEscape(parameterToString(r.customerId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.kableClientId == nil {
+		return localVarReturnValue, nil, reportError("kableClientId is required and must be specified")
+	}
+	if r.kableClientSecret == nil {
+		return localVarReturnValue, nil, reportError("kableClientSecret is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
+	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorMessage401
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorMessage500
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetCustomersRequest struct {
+	ctx context.Context
+	ApiService *CustomersApiService
+	kableClientId *string
+	kableClientSecret *string
+}
+
+// Your Kable client ID, found in the dashboard of your Kable account.
+func (r ApiGetCustomersRequest) KableClientId(kableClientId string) ApiGetCustomersRequest {
+	r.kableClientId = &kableClientId
+	return r
+}
+
+// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key.
+func (r ApiGetCustomersRequest) KableClientSecret(kableClientSecret string) ApiGetCustomersRequest {
+	r.kableClientSecret = &kableClientSecret
+	return r
+}
+
+func (r ApiGetCustomersRequest) Execute() ([]CustomerResponseDto, *http.Response, error) {
+	return r.ApiService.GetCustomersExecute(r)
+}
+
+/*
+GetCustomers get all customers
+
+Retrieve all customers.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @return ApiGetCustomersRequest
+*/
+func (a *CustomersApiService) GetCustomers(ctx context.Context) ApiGetCustomersRequest {
+	return ApiGetCustomersRequest{
+		ApiService: a,
+		ctx: ctx,
+	}
+}
+
+// Execute executes the request
+//  @return []CustomerResponseDto
+func (a *CustomersApiService) GetCustomersExecute(r ApiGetCustomersRequest) ([]CustomerResponseDto, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  []CustomerResponseDto
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomersApiService.GetCustomers")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/customers"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.kableClientId == nil {
+		return localVarReturnValue, nil, reportError("kableClientId is required and must be specified")
+	}
+	if r.kableClientSecret == nil {
+		return localVarReturnValue, nil, reportError("kableClientSecret is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
+	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorMessage401
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorMessage500
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiRemoveCustomerBundleRequest struct {
+	ctx context.Context
+	ApiService *CustomersApiService
+	kableClientId *string
+	kableClientSecret *string
+	customerId string
+	removeCustomerBundleRequestDto *RemoveCustomerBundleRequestDto
+}
+
+// Your Kable client ID, found in the dashboard of your Kable account.
+func (r ApiRemoveCustomerBundleRequest) KableClientId(kableClientId string) ApiRemoveCustomerBundleRequest {
+	r.kableClientId = &kableClientId
+	return r
+}
+
+// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key.
+func (r ApiRemoveCustomerBundleRequest) KableClientSecret(kableClientSecret string) ApiRemoveCustomerBundleRequest {
+	r.kableClientSecret = &kableClientSecret
+	return r
+}
+
+func (r ApiRemoveCustomerBundleRequest) RemoveCustomerBundleRequestDto(removeCustomerBundleRequestDto RemoveCustomerBundleRequestDto) ApiRemoveCustomerBundleRequest {
+	r.removeCustomerBundleRequestDto = &removeCustomerBundleRequestDto
+	return r
+}
+
+func (r ApiRemoveCustomerBundleRequest) Execute() (*CustomerResponseDto, *http.Response, error) {
+	return r.ApiService.RemoveCustomerBundleExecute(r)
+}
+
+/*
+RemoveCustomerBundle remove customer bundle
+
+Remove a bundle to a customer.
+
+Note that customer bundles can also be added and removed manually from within the Customers tab of your Kable dashboard.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param customerId The customer ID
+ @return ApiRemoveCustomerBundleRequest
+*/
+func (a *CustomersApiService) RemoveCustomerBundle(ctx context.Context, customerId string) ApiRemoveCustomerBundleRequest {
+	return ApiRemoveCustomerBundleRequest{
+		ApiService: a,
+		ctx: ctx,
+		customerId: customerId,
+	}
+}
+
+// Execute executes the request
+//  @return CustomerResponseDto
+func (a *CustomersApiService) RemoveCustomerBundleExecute(r ApiRemoveCustomerBundleRequest) (*CustomerResponseDto, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *CustomerResponseDto
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomersApiService.RemoveCustomerBundle")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/customers/{customerId}/bundles/remove"
+	localVarPath = strings.Replace(localVarPath, "{"+"customerId"+"}", url.PathEscape(parameterToString(r.customerId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.kableClientId == nil {
+		return localVarReturnValue, nil, reportError("kableClientId is required and must be specified")
+	}
+	if r.kableClientSecret == nil {
+		return localVarReturnValue, nil, reportError("kableClientSecret is required and must be specified")
+	}
+	if r.removeCustomerBundleRequestDto == nil {
+		return localVarReturnValue, nil, reportError("removeCustomerBundleRequestDto is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -1041,7 +1922,7 @@ func (a *CustomersApiService) RemoveCustomerPlansExecute(r ApiRemoveCustomerPlan
 	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
 	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
 	// body params
-	localVarPostBody = r.addCustomerPlansRequest
+	localVarPostBody = r.removeCustomerBundleRequestDto
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1063,6 +1944,182 @@ func (a *CustomersApiService) RemoveCustomerPlansExecute(r ApiRemoveCustomerPlan
 		newErr := &GenericOpenAPIError{
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorMessage401
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorMessage500
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiRemoveCustomerPlanRequest struct {
+	ctx context.Context
+	ApiService *CustomersApiService
+	kableClientId *string
+	kableClientSecret *string
+	customerId string
+	removeCustomerPlansRequestDto *RemoveCustomerPlansRequestDto
+}
+
+// Your Kable client ID, found in the dashboard of your Kable account.
+func (r ApiRemoveCustomerPlanRequest) KableClientId(kableClientId string) ApiRemoveCustomerPlanRequest {
+	r.kableClientId = &kableClientId
+	return r
+}
+
+// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key.
+func (r ApiRemoveCustomerPlanRequest) KableClientSecret(kableClientSecret string) ApiRemoveCustomerPlanRequest {
+	r.kableClientSecret = &kableClientSecret
+	return r
+}
+
+func (r ApiRemoveCustomerPlanRequest) RemoveCustomerPlansRequestDto(removeCustomerPlansRequestDto RemoveCustomerPlansRequestDto) ApiRemoveCustomerPlanRequest {
+	r.removeCustomerPlansRequestDto = &removeCustomerPlansRequestDto
+	return r
+}
+
+func (r ApiRemoveCustomerPlanRequest) Execute() (*CustomerResponseDto, *http.Response, error) {
+	return r.ApiService.RemoveCustomerPlanExecute(r)
+}
+
+/*
+RemoveCustomerPlan remove customer plan(s)
+
+Remove a plan(s) from a customer.
+
+Note that customer plans can also be added and removed manually from within the Customers tab of your Kable dashboard.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param customerId The customer ID
+ @return ApiRemoveCustomerPlanRequest
+*/
+func (a *CustomersApiService) RemoveCustomerPlan(ctx context.Context, customerId string) ApiRemoveCustomerPlanRequest {
+	return ApiRemoveCustomerPlanRequest{
+		ApiService: a,
+		ctx: ctx,
+		customerId: customerId,
+	}
+}
+
+// Execute executes the request
+//  @return CustomerResponseDto
+func (a *CustomersApiService) RemoveCustomerPlanExecute(r ApiRemoveCustomerPlanRequest) (*CustomerResponseDto, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *CustomerResponseDto
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomersApiService.RemoveCustomerPlan")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/customers/{customerId}/plans/remove"
+	localVarPath = strings.Replace(localVarPath, "{"+"customerId"+"}", url.PathEscape(parameterToString(r.customerId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.kableClientId == nil {
+		return localVarReturnValue, nil, reportError("kableClientId is required and must be specified")
+	}
+	if r.kableClientSecret == nil {
+		return localVarReturnValue, nil, reportError("kableClientSecret is required and must be specified")
+	}
+	if r.removeCustomerPlansRequestDto == nil {
+		return localVarReturnValue, nil, reportError("removeCustomerPlansRequestDto is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
+	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
+	// body params
+	localVarPostBody = r.removeCustomerPlansRequestDto
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorMessage401
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorMessage500
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -1085,41 +2142,39 @@ type ApiUpdateCustomerRequest struct {
 	kableClientId *string
 	kableClientSecret *string
 	customerId string
-	updateCustomerRequest *UpdateCustomerRequest
+	updateCustomerRequestDto *UpdateCustomerRequestDto
 }
 
-// Your client ID, found in the dashboard of your Kable account.
+// Your Kable client ID, found in the dashboard of your Kable account.
 func (r ApiUpdateCustomerRequest) KableClientId(kableClientId string) ApiUpdateCustomerRequest {
 	r.kableClientId = &kableClientId
 	return r
 }
 
-// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments of your API.
+// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key.
 func (r ApiUpdateCustomerRequest) KableClientSecret(kableClientSecret string) ApiUpdateCustomerRequest {
 	r.kableClientSecret = &kableClientSecret
 	return r
 }
 
-// Information to update about the customer.
-func (r ApiUpdateCustomerRequest) UpdateCustomerRequest(updateCustomerRequest UpdateCustomerRequest) ApiUpdateCustomerRequest {
-	r.updateCustomerRequest = &updateCustomerRequest
+func (r ApiUpdateCustomerRequest) UpdateCustomerRequestDto(updateCustomerRequestDto UpdateCustomerRequestDto) ApiUpdateCustomerRequest {
+	r.updateCustomerRequestDto = &updateCustomerRequestDto
 	return r
 }
 
-func (r ApiUpdateCustomerRequest) Execute() (*Customer, *http.Response, error) {
+func (r ApiUpdateCustomerRequest) Execute() (*CustomerResponseDto, *http.Response, error) {
 	return r.ApiService.UpdateCustomerExecute(r)
 }
 
 /*
-UpdateCustomer update a customer
+UpdateCustomer update customer
 
 Update a customer. Call this to programmatically update information about an existing customer.
 
 Note that clients can also be updated manually from within the Customers tab of your Kable dashboard.
 
-
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param customerId The identifier for the customer. You can pass in *either* the `customerId` (as defined by Kable) or the `clientId` (as defined by you).
+ @param customerId The customer ID
  @return ApiUpdateCustomerRequest
 */
 func (a *CustomersApiService) UpdateCustomer(ctx context.Context, customerId string) ApiUpdateCustomerRequest {
@@ -1131,13 +2186,13 @@ func (a *CustomersApiService) UpdateCustomer(ctx context.Context, customerId str
 }
 
 // Execute executes the request
-//  @return Customer
-func (a *CustomersApiService) UpdateCustomerExecute(r ApiUpdateCustomerRequest) (*Customer, *http.Response, error) {
+//  @return CustomerResponseDto
+func (a *CustomersApiService) UpdateCustomerExecute(r ApiUpdateCustomerRequest) (*CustomerResponseDto, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *Customer
+		localVarReturnValue  *CustomerResponseDto
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomersApiService.UpdateCustomer")
@@ -1145,7 +2200,7 @@ func (a *CustomersApiService) UpdateCustomerExecute(r ApiUpdateCustomerRequest) 
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/customers/{customerId}/update"
+	localVarPath := localBasePath + "/api/v1/customers/{customerId}/update"
 	localVarPath = strings.Replace(localVarPath, "{"+"customerId"+"}", url.PathEscape(parameterToString(r.customerId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
@@ -1156,6 +2211,9 @@ func (a *CustomersApiService) UpdateCustomerExecute(r ApiUpdateCustomerRequest) 
 	}
 	if r.kableClientSecret == nil {
 		return localVarReturnValue, nil, reportError("kableClientSecret is required and must be specified")
+	}
+	if r.updateCustomerRequestDto == nil {
+		return localVarReturnValue, nil, reportError("updateCustomerRequestDto is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -1178,7 +2236,7 @@ func (a *CustomersApiService) UpdateCustomerExecute(r ApiUpdateCustomerRequest) 
 	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
 	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
 	// body params
-	localVarPostBody = r.updateCustomerRequest
+	localVarPostBody = r.updateCustomerRequestDto
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1200,6 +2258,25 @@ func (a *CustomersApiService) UpdateCustomerExecute(r ApiUpdateCustomerRequest) 
 		newErr := &GenericOpenAPIError{
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorMessage401
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorMessage500
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}

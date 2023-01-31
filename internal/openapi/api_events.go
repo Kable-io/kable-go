@@ -1,9 +1,9 @@
 /*
 Kable API
 
-The Kable API allows developers to manage **customers** and **API keys** and record **events** about their API.   ## API Host and Environments  Kable is accessible in Live and Test environments for authentication and metering of client API requests. You will have separate API keys to access each environment.  You should only use Kable's Live environment for your own production data. All other configured environments should use Kable's Test environment.   ## API Protocols and Headers  All requests to the Kable API are made over HTTPS TLS v1.2+ to ensure security. Calls made over HTTP will fail. Any requests without proper authentication will also fail.  The Kable API uses standard JSON for requests and responses. Be sure to set both the `Content-Type` and `Accept` headers on each request to application/json.  Each Kable API response includes a `requestId` as the `X-REQUEST-ID` response header. The `requestId` is included regardless whether the API request succeeded or failed. You can use this requestId to help with debugging or when contacting support regarding a specific API call.   ## API Keys  There are two types of API keys on Kable.  ### Kable Keys Kable Keys are the keys you, the Kable customer, use to interact with Kable. These keys help us ensure that only you are interacting with Kable on your behalf. You can find your keys on the Company page of the dashboard after you sign up.  Kable Keys should be included in every request to the Kable API. You must provide your client ID as the `KABLE-CLIENT-ID` header and your secret key as the `KABLE-CLIENT-SECRET` header on each request to Kable. If you are using a language-specific Kable library, you will initialize the SDK using these keys.  ### Customer Keys Customer Keys are the keys your customers use to interact with your API. Customer Keys are authenticated by Kable when a customer makes a request to your API if you use Kable's authentication services. Customers must provide their client ID (defined as `clientId` when you create the customer) as the `X-CLIENT-ID` header and their secret key as the `X-API-KEY` header on each request to your API that Kable is to authenticate.   ## API Versioning  All Kable endpoints are versioned. After the host, each API can be found at `/api/vX/...` where X is the API version.  We strive to ensure that changes to the Kable API are backward compatible. Sometimes, though, we must break from older design paradigms to make the product better. When this happens, a new version of the API is released.  The current version of Kable is **v1**. 
+The Kable API allows developers to manage customers, plans, and usage data for their API.  ## API Host and Environments  Kable is accessible in Live and Test environments for authentication and metering of client API requests. You will have separate API keys to access each environment.  You should only use Kable's Live environment for your own production data. All other configured environments should use Kable's Test environment.  ## API Protocols and Headers  All requests to the Kable API are made over HTTPS TLS v1.2+ to ensure security. Calls made over HTTP will fail. Any requests without proper authentication will also fail.  The Kable API uses standard JSON for requests and responses. Be sure to set both the `Content-Type` and `Accept` headers on each request to `application/json`.  Each Kable API response includes a `requestId` as the `X-REQUEST-ID` response header. The `requestId` is included on most responses regardless whether the API request succeeded or failed. You can use this `requestId` to help with debugging or when contacting support regarding a specific API call.  ## API Versioning  All Kable endpoints are versioned. After the host, each API can be found at `/api/vX/...` where X is the API version.  We strive to ensure that changes to the Kable API are backward compatible. Sometimes, though, we must break from older design paradigms to make the product better. When this happens, a new version of the API is released.  The current version of the Kable API is `v1`.  
 
-API version: 1.2.1
+API version: 1.0.0
 Contact: contact@kable.io
 */
 
@@ -23,68 +23,67 @@ import (
 // EventsApiService EventsApi service
 type EventsApiService service
 
-type ApiCreateEventsRequest struct {
+type ApiCreateEventRequest struct {
 	ctx context.Context
 	ApiService *EventsApiService
 	kableClientId *string
 	kableClientSecret *string
-	event *[]Event
+	eventDto *[]EventDto
 }
 
-// Your client ID, found in the dashboard of your Kable account.
-func (r ApiCreateEventsRequest) KableClientId(kableClientId string) ApiCreateEventsRequest {
+// Your Kable client ID, found in the dashboard of your Kable account.
+func (r ApiCreateEventRequest) KableClientId(kableClientId string) ApiCreateEventRequest {
 	r.kableClientId = &kableClientId
 	return r
 }
 
-// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key, depending on the environment in which the key is being created.
-func (r ApiCreateEventsRequest) KableClientSecret(kableClientSecret string) ApiCreateEventsRequest {
+// Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key.
+func (r ApiCreateEventRequest) KableClientSecret(kableClientSecret string) ApiCreateEventRequest {
 	r.kableClientSecret = &kableClientSecret
 	return r
 }
 
-// Events containing information about things that happened in your API
-func (r ApiCreateEventsRequest) Event(event []Event) ApiCreateEventsRequest {
-	r.event = &event
+// An event or list of usage events to record.
+func (r ApiCreateEventRequest) EventDto(eventDto []EventDto) ApiCreateEventRequest {
+	r.eventDto = &eventDto
 	return r
 }
 
-func (r ApiCreateEventsRequest) Execute() (*http.Response, error) {
-	return r.ApiService.CreateEventsExecute(r)
+func (r ApiCreateEventRequest) Execute() (*http.Response, error) {
+	return r.ApiService.CreateEventExecute(r)
 }
 
 /*
-CreateEvents record events
+CreateEvent record events
 
 Record information about something that happened in your API.
 
 Kable uses events to perform metering and usage-based billing calculations.
 
-
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCreateEventsRequest
+ @return ApiCreateEventRequest
 */
-func (a *EventsApiService) CreateEvents(ctx context.Context) ApiCreateEventsRequest {
-	return ApiCreateEventsRequest{
+func (a *EventsApiService) CreateEvent(ctx context.Context) ApiCreateEventRequest {
+	return ApiCreateEventRequest{
 		ApiService: a,
 		ctx: ctx,
 	}
 }
 
 // Execute executes the request
-func (a *EventsApiService) CreateEventsExecute(r ApiCreateEventsRequest) (*http.Response, error) {
+func (a *EventsApiService) CreateEventExecute(r ApiCreateEventRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
 		formFiles            []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventsApiService.CreateEvents")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventsApiService.CreateEvent")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/events/create"
+	localVarPath := localBasePath + "/api/v1/events/create"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -94,6 +93,9 @@ func (a *EventsApiService) CreateEventsExecute(r ApiCreateEventsRequest) (*http.
 	}
 	if r.kableClientSecret == nil {
 		return nil, reportError("kableClientSecret is required and must be specified")
+	}
+	if r.eventDto == nil {
+		return nil, reportError("eventDto is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -106,7 +108,7 @@ func (a *EventsApiService) CreateEventsExecute(r ApiCreateEventsRequest) (*http.
 	}
 
 	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{}
+	localVarHTTPHeaderAccepts := []string{"application/json"}
 
 	// set Accept header
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
@@ -116,7 +118,7 @@ func (a *EventsApiService) CreateEventsExecute(r ApiCreateEventsRequest) (*http.
 	localVarHeaderParams["Kable-Client-Id"] = parameterToString(*r.kableClientId, "")
 	localVarHeaderParams["Kable-Client-Secret"] = parameterToString(*r.kableClientSecret, "")
 	// body params
-	localVarPostBody = r.event
+	localVarPostBody = r.eventDto
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return nil, err
@@ -138,6 +140,25 @@ func (a *EventsApiService) CreateEventsExecute(r ApiCreateEventsRequest) (*http.
 		newErr := &GenericOpenAPIError{
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorMessage401
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorMessage500
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
 		}
 		return localVarHTTPResponse, newErr
 	}

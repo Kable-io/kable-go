@@ -1,9 +1,9 @@
 /*
 Kable API
 
-The Kable API allows developers to manage **customers** and **API keys** and record **events** about their API.   ## API Host and Environments  Kable is accessible in Live and Test environments for authentication and metering of client API requests. You will have separate API keys to access each environment.  You should only use Kable's Live environment for your own production data. All other configured environments should use Kable's Test environment.   ## API Protocols and Headers  All requests to the Kable API are made over HTTPS TLS v1.2+ to ensure security. Calls made over HTTP will fail. Any requests without proper authentication will also fail.  The Kable API uses standard JSON for requests and responses. Be sure to set both the `Content-Type` and `Accept` headers on each request to application/json.  Each Kable API response includes a `requestId` as the `X-REQUEST-ID` response header. The `requestId` is included regardless whether the API request succeeded or failed. You can use this requestId to help with debugging or when contacting support regarding a specific API call.   ## API Keys  There are two types of API keys on Kable.  ### Kable Keys Kable Keys are the keys you, the Kable customer, use to interact with Kable. These keys help us ensure that only you are interacting with Kable on your behalf. You can find your keys on the Company page of the dashboard after you sign up.  Kable Keys should be included in every request to the Kable API. You must provide your client ID as the `KABLE-CLIENT-ID` header and your secret key as the `KABLE-CLIENT-SECRET` header on each request to Kable. If you are using a language-specific Kable library, you will initialize the SDK using these keys.  ### Customer Keys Customer Keys are the keys your customers use to interact with your API. Customer Keys are authenticated by Kable when a customer makes a request to your API if you use Kable's authentication services. Customers must provide their client ID (defined as `clientId` when you create the customer) as the `X-CLIENT-ID` header and their secret key as the `X-API-KEY` header on each request to your API that Kable is to authenticate.   ## API Versioning  All Kable endpoints are versioned. After the host, each API can be found at `/api/vX/...` where X is the API version.  We strive to ensure that changes to the Kable API are backward compatible. Sometimes, though, we must break from older design paradigms to make the product better. When this happens, a new version of the API is released.  The current version of Kable is **v1**. 
+The Kable API allows developers to manage customers, plans, and usage data for their API.  ## API Host and Environments  Kable is accessible in Live and Test environments for authentication and metering of client API requests. You will have separate API keys to access each environment.  You should only use Kable's Live environment for your own production data. All other configured environments should use Kable's Test environment.  ## API Protocols and Headers  All requests to the Kable API are made over HTTPS TLS v1.2+ to ensure security. Calls made over HTTP will fail. Any requests without proper authentication will also fail.  The Kable API uses standard JSON for requests and responses. Be sure to set both the `Content-Type` and `Accept` headers on each request to `application/json`.  Each Kable API response includes a `requestId` as the `X-REQUEST-ID` response header. The `requestId` is included on most responses regardless whether the API request succeeded or failed. You can use this `requestId` to help with debugging or when contacting support regarding a specific API call.  ## API Versioning  All Kable endpoints are versioned. After the host, each API can be found at `/api/vX/...` where X is the API version.  We strive to ensure that changes to the Kable API are backward compatible. Sometimes, though, we must break from older design paradigms to make the product better. When this happens, a new version of the API is released.  The current version of the Kable API is `v1`.  
 
-API version: 1.2.1
+API version: 1.0.0
 Contact: contact@kable.io
 */
 
@@ -42,7 +42,7 @@ var (
 	xmlCheck  = regexp.MustCompile(`(?i:(?:application|text)/xml)`)
 )
 
-// APIClient manages communication with the Kable API API v1.2.1
+// APIClient manages communication with the Kable API API v1.0.0
 // In most cases there should be only one, shared, APIClient.
 type APIClient struct {
 	cfg    *Configuration
@@ -50,13 +50,19 @@ type APIClient struct {
 
 	// API Services
 
-	CreditGrantsApi *CreditGrantsApiService
+	AuthenticationApi *AuthenticationApiService
+
+	BundlesApi *BundlesApiService
 
 	CustomersApi *CustomersApiService
 
 	DimensionsApi *DimensionsApiService
 
+	EntitlementsApi *EntitlementsApiService
+
 	EventsApi *EventsApiService
+
+	InvoicesApi *InvoicesApiService
 
 	PlansApi *PlansApiService
 
@@ -81,10 +87,13 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.common.client = c
 
 	// API Services
-	c.CreditGrantsApi = (*CreditGrantsApiService)(&c.common)
+	c.AuthenticationApi = (*AuthenticationApiService)(&c.common)
+	c.BundlesApi = (*BundlesApiService)(&c.common)
 	c.CustomersApi = (*CustomersApiService)(&c.common)
 	c.DimensionsApi = (*DimensionsApiService)(&c.common)
+	c.EntitlementsApi = (*EntitlementsApiService)(&c.common)
 	c.EventsApi = (*EventsApiService)(&c.common)
+	c.InvoicesApi = (*InvoicesApiService)(&c.common)
 	c.PlansApi = (*PlansApiService)(&c.common)
 	c.TokensApi = (*TokensApiService)(&c.common)
 	c.UsageApi = (*UsageApiService)(&c.common)

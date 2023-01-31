@@ -1,176 +1,30 @@
 # \CustomersApi
 
-All URIs are relative to *https://live.kable.io/api/v1*
+All URIs are relative to *https://live.kable.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**AddCustomerPaymentMethod**](CustomersApi.md#AddCustomerPaymentMethod) | **Post** /customers/{customerId}/payment_methods/add | add a customer payment method
-[**AddCustomerPlans**](CustomersApi.md#AddCustomerPlans) | **Post** /customers/{customerId}/plans/add | add a plan(s) to a customer
-[**CancelCustomer**](CustomersApi.md#CancelCustomer) | **Post** /customers/{customerId}/cancel | cancel a customer
-[**CreateCustomer**](CustomersApi.md#CreateCustomer) | **Post** /customers/create | create a customer
-[**DeleteCustomer**](CustomersApi.md#DeleteCustomer) | **Post** /customers/{customerId}/delete | delete a customer
-[**GetAllCustomers**](CustomersApi.md#GetAllCustomers) | **Get** /customers | get all customers
-[**GetCustomer**](CustomersApi.md#GetCustomer) | **Get** /customers/{customerId} | get customer
-[**RemoveCustomerPlans**](CustomersApi.md#RemoveCustomerPlans) | **Post** /customers/{customerId}/plans/remove | remove a plan(s) from a customer
-[**UpdateCustomer**](CustomersApi.md#UpdateCustomer) | **Post** /customers/{customerId}/update | update a customer
+[**CancelCustomer**](CustomersApi.md#CancelCustomer) | **Post** /api/v1/customers/{customerId}/cancel | cancel a customer
+[**CreateCustomer**](CustomersApi.md#CreateCustomer) | **Post** /api/v1/customers/create | create customer
+[**CreateCustomerBundle**](CustomersApi.md#CreateCustomerBundle) | **Post** /api/v1/customers/{customerId}/bundles/add | add customer bundle
+[**CreateCustomerCreditGrant**](CustomersApi.md#CreateCustomerCreditGrant) | **Post** /api/v1/customers/{customerId}/credits/create | create customer credit grant
+[**CreateCustomerPaymentMethod**](CustomersApi.md#CreateCustomerPaymentMethod) | **Post** /api/v1/customers/{customerId}/payment_methods/add | add customer payment method
+[**CreateCustomerPlan**](CustomersApi.md#CreateCustomerPlan) | **Post** /api/v1/customers/{customerId}/plans/add | add customer plan(s)
+[**DeleteCustomer**](CustomersApi.md#DeleteCustomer) | **Post** /api/v1/customers/{customerId}/delete | delete customer
+[**GetCustomer**](CustomersApi.md#GetCustomer) | **Get** /api/v1/customers/{customerId} | get customer
+[**GetCustomerCreditBalance**](CustomersApi.md#GetCustomerCreditBalance) | **Get** /api/v1/customers/{customerId}/credits/balance | get customer credit balance
+[**GetCustomerEntitlement**](CustomersApi.md#GetCustomerEntitlement) | **Get** /api/v1/customers/{customerId}/entitlements/{entitlementId} | get customer entitlement
+[**GetCustomerEntitlements**](CustomersApi.md#GetCustomerEntitlements) | **Get** /api/v1/customers/{customerId}/entitlements | get all customer entitlements
+[**GetCustomers**](CustomersApi.md#GetCustomers) | **Get** /api/v1/customers | get all customers
+[**RemoveCustomerBundle**](CustomersApi.md#RemoveCustomerBundle) | **Post** /api/v1/customers/{customerId}/bundles/remove | remove customer bundle
+[**RemoveCustomerPlan**](CustomersApi.md#RemoveCustomerPlan) | **Post** /api/v1/customers/{customerId}/plans/remove | remove customer plan(s)
+[**UpdateCustomer**](CustomersApi.md#UpdateCustomer) | **Post** /api/v1/customers/{customerId}/update | update customer
 
-
-
-## AddCustomerPaymentMethod
-
-> AddCustomerPaymentMethod200Response AddCustomerPaymentMethod(ctx, customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).AddCustomerPaymentMethodRequest(addCustomerPaymentMethodRequest).Execute()
-
-add a customer payment method
-
-
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    kableClientId := "kci_3c90e9ac92c64f31ae8ed84d21e18740" // string | Your client ID, found in the dashboard of your Kable account.
-    kableClientSecret := "sk_test.jI92Cbu0.XeHWdYM1VTLy4oLtGMw8wrmpt5q9d04n" // string | Your `LIVE` or `TEST` secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for `LIVE` and `TEST` environments of your API.
-    customerId := "cus_8276e1ac8ed84d21c64f31ae0082fe" // string | The identifier for the customer. You can pass in *either* the `customerId` (as defined by Kable) or the `clientId` (as defined by you).
-    addCustomerPaymentMethodRequest := *openapiclient.NewAddCustomerPaymentMethodRequest("https://yourcompany.com/signup/complete?success=true", "https://yourcompany.com/signup/failure?success=false") // AddCustomerPaymentMethodRequest | URLs to which to redirect after payment method details are stored in Stripe (and completion of Stripe Checkout Session). (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.CustomersApi.AddCustomerPaymentMethod(context.Background(), customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).AddCustomerPaymentMethodRequest(addCustomerPaymentMethodRequest).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.AddCustomerPaymentMethod``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `AddCustomerPaymentMethod`: AddCustomerPaymentMethod200Response
-    fmt.Fprintf(os.Stdout, "Response from `CustomersApi.AddCustomerPaymentMethod`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**customerId** | **string** | The identifier for the customer. You can pass in *either* the &#x60;customerId&#x60; (as defined by Kable) or the &#x60;clientId&#x60; (as defined by you). | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiAddCustomerPaymentMethodRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **kableClientId** | **string** | Your client ID, found in the dashboard of your Kable account. | 
- **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments of your API. | 
-
- **addCustomerPaymentMethodRequest** | [**AddCustomerPaymentMethodRequest**](AddCustomerPaymentMethodRequest.md) | URLs to which to redirect after payment method details are stored in Stripe (and completion of Stripe Checkout Session). | 
-
-### Return type
-
-[**AddCustomerPaymentMethod200Response**](AddCustomerPaymentMethod200Response.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## AddCustomerPlans
-
-> Customer AddCustomerPlans(ctx, customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).AddCustomerPlansRequest(addCustomerPlansRequest).Execute()
-
-add a plan(s) to a customer
-
-
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    kableClientId := "kci_3c90e9ac92c64f31ae8ed84d21e18740" // string | Your client ID, found in the dashboard of your Kable account.
-    kableClientSecret := "sk_test.jI92Cbu0.XeHWdYM1VTLy4oLtGMw8wrmpt5q9d04n" // string | Your `LIVE` or `TEST` secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for `LIVE` and `TEST` environments of your API.
-    customerId := "cus_8276e1ac8ed84d21c64f31ae0082fe" // string | The identifier for the customer. You can pass in *either* the `customerId` (as defined by Kable) or the `clientId` (as defined by you).
-    addCustomerPlansRequest := *openapiclient.NewAddCustomerPlansRequest() // AddCustomerPlansRequest | Plan ID(s) to add. You can provide either a singular `planId` or a list of `planIds`. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.CustomersApi.AddCustomerPlans(context.Background(), customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).AddCustomerPlansRequest(addCustomerPlansRequest).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.AddCustomerPlans``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `AddCustomerPlans`: Customer
-    fmt.Fprintf(os.Stdout, "Response from `CustomersApi.AddCustomerPlans`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**customerId** | **string** | The identifier for the customer. You can pass in *either* the &#x60;customerId&#x60; (as defined by Kable) or the &#x60;clientId&#x60; (as defined by you). | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiAddCustomerPlansRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **kableClientId** | **string** | Your client ID, found in the dashboard of your Kable account. | 
- **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments of your API. | 
-
- **addCustomerPlansRequest** | [**AddCustomerPlansRequest**](AddCustomerPlansRequest.md) | Plan ID(s) to add. You can provide either a singular &#x60;planId&#x60; or a list of &#x60;planIds&#x60;. | 
-
-### Return type
-
-[**Customer**](Customer.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
 
 
 ## CancelCustomer
 
-> Customer CancelCustomer(ctx, customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
+> CustomerResponseDto CancelCustomer(ctx, customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
 
 cancel a customer
 
@@ -189,9 +43,9 @@ import (
 )
 
 func main() {
-    kableClientId := "kci_3c90e9ac92c64f31ae8ed84d21e18740" // string | Your client ID, found in the dashboard of your Kable account.
-    kableClientSecret := "sk_test.jI92Cbu0.XeHWdYM1VTLy4oLtGMw8wrmpt5q9d04n" // string | Your `LIVE` or `TEST` secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for `LIVE` and `TEST` environments of your API.
-    customerId := "cus_8276e1ac8ed84d21c64f31ae0082fe" // string | The identifier for the customer. You can pass in *either* the `customerId` (as defined by Kable) or the `clientId` (as defined by you).
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+    customerId := "cus_8276e1ac8ed84d21c64f31ae0082fe" // string | The customer ID
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
@@ -200,7 +54,7 @@ func main() {
         fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.CancelCustomer``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
-    // response from `CancelCustomer`: Customer
+    // response from `CancelCustomer`: CustomerResponseDto
     fmt.Fprintf(os.Stdout, "Response from `CustomersApi.CancelCustomer`: %v\n", resp)
 }
 ```
@@ -211,7 +65,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**customerId** | **string** | The identifier for the customer. You can pass in *either* the &#x60;customerId&#x60; (as defined by Kable) or the &#x60;clientId&#x60; (as defined by you). | 
+**customerId** | **string** | The customer ID | 
 
 ### Other Parameters
 
@@ -220,13 +74,13 @@ Other parameters are passed through a pointer to a apiCancelCustomerRequest stru
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **kableClientId** | **string** | Your client ID, found in the dashboard of your Kable account. | 
- **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments of your API. | 
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
 
 
 ### Return type
 
-[**Customer**](Customer.md)
+[**CustomerResponseDto**](CustomerResponseDto.md)
 
 ### Authorization
 
@@ -244,9 +98,9 @@ No authorization required
 
 ## CreateCustomer
 
-> CreateCustomer200Response CreateCustomer(ctx).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Keys(keys).Stripe(stripe).CreateCustomerRequest(createCustomerRequest).Execute()
+> CustomerResponseWithKeysDto CreateCustomer(ctx).KableClientId(kableClientId).KableClientSecret(kableClientSecret).CreateCustomerRequestDto(createCustomerRequestDto).Stripe(stripe).Keys(keys).Execute()
 
-create a customer
+create customer
 
 
 
@@ -263,20 +117,20 @@ import (
 )
 
 func main() {
-    kableClientId := "kci_3c90e9ac92c64f31ae8ed84d21e18740" // string | Your client ID, found in the dashboard of your Kable account.
-    kableClientSecret := "sk_test.jI92Cbu0.XeHWdYM1VTLy4oLtGMw8wrmpt5q9d04n" // string | Your `LIVE` or `TEST` secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. You will be able to record usage data for each customer separately in `LIVE` and `TEST` environments.
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+    createCustomerRequestDto := *openapiclient.NewCreateCustomerRequestDto("yourcompanyuser_1234567890", "Awesome Corp", "USD") // CreateCustomerRequestDto | 
+    stripe := true // bool | When true, Kable will also create and attach a Stripe customer.  If your account is not connected to Stripe, the request will fail. If you provide a `stripeCustomerId` in the request body, this query parameter will be ignored. (optional)
     keys := true // bool | When true, Kable will create API keys for this customer. (This is only necessary if you use Kable for authentication.) (optional)
-    stripe := true // bool | When true, Kable will also create and attach a Stripe customer.  If your account is not connected to Stripe, the request will fail. If you provide a `stripeCustomerId` in the request body, this query parameter will be ignored.  (optional)
-    createCustomerRequest := *openapiclient.NewCreateCustomerRequest("yourcompanyuser_1234567890", "Awesome Corp") // CreateCustomerRequest | Information about the customer you are creating.  Client IDs should correspond to identifiers in your own application. If you are migrating from another authentication system, this is often the same `clientId` that the customer was using before. Each client ID must be unique, as Kable uses this field to uniquely identify customers. Company names can be edited later in the dashboard, but client IDs cannot be changed.  (optional)
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.CustomersApi.CreateCustomer(context.Background()).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Keys(keys).Stripe(stripe).CreateCustomerRequest(createCustomerRequest).Execute()
+    resp, r, err := apiClient.CustomersApi.CreateCustomer(context.Background()).KableClientId(kableClientId).KableClientSecret(kableClientSecret).CreateCustomerRequestDto(createCustomerRequestDto).Stripe(stripe).Keys(keys).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.CreateCustomer``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
-    // response from `CreateCustomer`: CreateCustomer200Response
+    // response from `CreateCustomer`: CustomerResponseWithKeysDto
     fmt.Fprintf(os.Stdout, "Response from `CustomersApi.CreateCustomer`: %v\n", resp)
 }
 ```
@@ -292,15 +146,319 @@ Other parameters are passed through a pointer to a apiCreateCustomerRequest stru
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **kableClientId** | **string** | Your client ID, found in the dashboard of your Kable account. | 
- **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. You will be able to record usage data for each customer separately in &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments. | 
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
+ **createCustomerRequestDto** | [**CreateCustomerRequestDto**](CreateCustomerRequestDto.md) |  | 
+ **stripe** | **bool** | When true, Kable will also create and attach a Stripe customer.  If your account is not connected to Stripe, the request will fail. If you provide a &#x60;stripeCustomerId&#x60; in the request body, this query parameter will be ignored. | 
  **keys** | **bool** | When true, Kable will create API keys for this customer. (This is only necessary if you use Kable for authentication.) | 
- **stripe** | **bool** | When true, Kable will also create and attach a Stripe customer.  If your account is not connected to Stripe, the request will fail. If you provide a &#x60;stripeCustomerId&#x60; in the request body, this query parameter will be ignored.  | 
- **createCustomerRequest** | [**CreateCustomerRequest**](CreateCustomerRequest.md) | Information about the customer you are creating.  Client IDs should correspond to identifiers in your own application. If you are migrating from another authentication system, this is often the same &#x60;clientId&#x60; that the customer was using before. Each client ID must be unique, as Kable uses this field to uniquely identify customers. Company names can be edited later in the dashboard, but client IDs cannot be changed.  | 
 
 ### Return type
 
-[**CreateCustomer200Response**](CreateCustomer200Response.md)
+[**CustomerResponseWithKeysDto**](CustomerResponseWithKeysDto.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## CreateCustomerBundle
+
+> CustomerResponseDto CreateCustomerBundle(ctx, customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).CreateCustomerBundleRequestDto(createCustomerBundleRequestDto).Execute()
+
+add customer bundle
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+    customerId := "cus_8276e1ac8ed84d21c64f31ae0082fe" // string | The customer ID
+    createCustomerBundleRequestDto := *openapiclient.NewCreateCustomerBundleRequestDto("bun_a23e148584d0463482c961b7f62f824c") // CreateCustomerBundleRequestDto | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.CustomersApi.CreateCustomerBundle(context.Background(), customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).CreateCustomerBundleRequestDto(createCustomerBundleRequestDto).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.CreateCustomerBundle``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `CreateCustomerBundle`: CustomerResponseDto
+    fmt.Fprintf(os.Stdout, "Response from `CustomersApi.CreateCustomerBundle`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**customerId** | **string** | The customer ID | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateCustomerBundleRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
+
+ **createCustomerBundleRequestDto** | [**CreateCustomerBundleRequestDto**](CreateCustomerBundleRequestDto.md) |  | 
+
+### Return type
+
+[**CustomerResponseDto**](CustomerResponseDto.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## CreateCustomerCreditGrant
+
+> CreditGrantResponseDto CreateCustomerCreditGrant(ctx, customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).CreateCreditGrantRequestDto(createCreditGrantRequestDto).Execute()
+
+create customer credit grant
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+    customerId := "cus_8276e1ac8ed84d21c64f31ae0082fe" // string | The customer ID
+    createCreditGrantRequestDto := *openapiclient.NewCreateCreditGrantRequestDto(float32(100)) // CreateCreditGrantRequestDto | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.CustomersApi.CreateCustomerCreditGrant(context.Background(), customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).CreateCreditGrantRequestDto(createCreditGrantRequestDto).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.CreateCustomerCreditGrant``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `CreateCustomerCreditGrant`: CreditGrantResponseDto
+    fmt.Fprintf(os.Stdout, "Response from `CustomersApi.CreateCustomerCreditGrant`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**customerId** | **string** | The customer ID | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateCustomerCreditGrantRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
+
+ **createCreditGrantRequestDto** | [**CreateCreditGrantRequestDto**](CreateCreditGrantRequestDto.md) |  | 
+
+### Return type
+
+[**CreditGrantResponseDto**](CreditGrantResponseDto.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## CreateCustomerPaymentMethod
+
+> AddCustomerPaymentMethodResponseDto CreateCustomerPaymentMethod(ctx, customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).AddCustomerPaymentMethodRequestDto(addCustomerPaymentMethodRequestDto).Execute()
+
+add customer payment method
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+    customerId := "cus_8276e1ac8ed84d21c64f31ae0082fe" // string | The customer ID
+    addCustomerPaymentMethodRequestDto := *openapiclient.NewAddCustomerPaymentMethodRequestDto("https://yourcompany.com/signup/complete?success=true", "https://yourcompany.com/signup/failure?success=false") // AddCustomerPaymentMethodRequestDto | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.CustomersApi.CreateCustomerPaymentMethod(context.Background(), customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).AddCustomerPaymentMethodRequestDto(addCustomerPaymentMethodRequestDto).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.CreateCustomerPaymentMethod``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `CreateCustomerPaymentMethod`: AddCustomerPaymentMethodResponseDto
+    fmt.Fprintf(os.Stdout, "Response from `CustomersApi.CreateCustomerPaymentMethod`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**customerId** | **string** | The customer ID | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateCustomerPaymentMethodRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
+
+ **addCustomerPaymentMethodRequestDto** | [**AddCustomerPaymentMethodRequestDto**](AddCustomerPaymentMethodRequestDto.md) |  | 
+
+### Return type
+
+[**AddCustomerPaymentMethodResponseDto**](AddCustomerPaymentMethodResponseDto.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## CreateCustomerPlan
+
+> CustomerResponseDto CreateCustomerPlan(ctx, customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).CreateCustomerPlansRequestDto(createCustomerPlansRequestDto).Execute()
+
+add customer plan(s)
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+    customerId := "cus_8276e1ac8ed84d21c64f31ae0082fe" // string | The customer ID
+    createCustomerPlansRequestDto := *openapiclient.NewCreateCustomerPlansRequestDto() // CreateCustomerPlansRequestDto | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.CustomersApi.CreateCustomerPlan(context.Background(), customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).CreateCustomerPlansRequestDto(createCustomerPlansRequestDto).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.CreateCustomerPlan``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `CreateCustomerPlan`: CustomerResponseDto
+    fmt.Fprintf(os.Stdout, "Response from `CustomersApi.CreateCustomerPlan`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**customerId** | **string** | The customer ID | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateCustomerPlanRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
+
+ **createCustomerPlansRequestDto** | [**CreateCustomerPlansRequestDto**](CreateCustomerPlansRequestDto.md) |  | 
+
+### Return type
+
+[**CustomerResponseDto**](CustomerResponseDto.md)
 
 ### Authorization
 
@@ -320,7 +478,7 @@ No authorization required
 
 > DeleteCustomer(ctx, customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
 
-delete a customer
+delete customer
 
 
 
@@ -337,9 +495,9 @@ import (
 )
 
 func main() {
-    kableClientId := "kci_3c90e9ac92c64f31ae8ed84d21e18740" // string | Your client ID, found in the dashboard of your Kable account.
-    kableClientSecret := "sk_test.jI92Cbu0.XeHWdYM1VTLy4oLtGMw8wrmpt5q9d04n" // string | Your `LIVE` or `TEST` secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for `LIVE` and `TEST` environments of your API.
-    customerId := "cus_8276e1ac8ed84d21c64f31ae0082fe" // string | The identifier for the customer. You can pass in *either* the `customerId` (as defined by Kable) or the `clientId` (as defined by you).
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+    customerId := "cus_8276e1ac8ed84d21c64f31ae0082fe" // string | The customer ID
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
@@ -357,7 +515,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**customerId** | **string** | The identifier for the customer. You can pass in *either* the &#x60;customerId&#x60; (as defined by Kable) or the &#x60;clientId&#x60; (as defined by you). | 
+**customerId** | **string** | The customer ID | 
 
 ### Other Parameters
 
@@ -366,81 +524,13 @@ Other parameters are passed through a pointer to a apiDeleteCustomerRequest stru
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **kableClientId** | **string** | Your client ID, found in the dashboard of your Kable account. | 
- **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments of your API. | 
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
 
 
 ### Return type
 
  (empty response body)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: Not defined
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## GetAllCustomers
-
-> []Customer GetAllCustomers(ctx).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
-
-get all customers
-
-
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    kableClientId := "kci_3c90e9ac92c64f31ae8ed84d21e18740" // string | Your client ID, found in the dashboard of your Kable account.
-    kableClientSecret := "sk_test.jI92Cbu0.XeHWdYM1VTLy4oLtGMw8wrmpt5q9d04n" // string | Your `LIVE` or `TEST` secret key. Customers exist across all environments, so it does not matter which environment you use to fetch customers.
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.CustomersApi.GetAllCustomers(context.Background()).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.GetAllCustomers``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `GetAllCustomers`: []Customer
-    fmt.Fprintf(os.Stdout, "Response from `CustomersApi.GetAllCustomers`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiGetAllCustomersRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **kableClientId** | **string** | Your client ID, found in the dashboard of your Kable account. | 
- **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to fetch customers. | 
-
-### Return type
-
-[**[]Customer**](Customer.md)
 
 ### Authorization
 
@@ -458,7 +548,7 @@ No authorization required
 
 ## GetCustomer
 
-> Customer GetCustomer(ctx, customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
+> CustomerResponseDto GetCustomer(ctx, customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
 
 get customer
 
@@ -477,9 +567,9 @@ import (
 )
 
 func main() {
-    kableClientId := "kci_3c90e9ac92c64f31ae8ed84d21e18740" // string | Your client ID, found in the dashboard of your Kable account.
-    kableClientSecret := "sk_test.jI92Cbu0.XeHWdYM1VTLy4oLtGMw8wrmpt5q9d04n" // string | Your `LIVE` or `TEST` secret key. Customers exist across all environments, so it does not matter which environment you use to fetch customers.
-    customerId := "yourcompanyuser_1234567890" // string | The identifier for the customer. You can pass in *either* the `customerId` (as defined by Kable) or the `clientId` (as defined by you).
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+    customerId := "cus_8276e1ac8ed84d21c64f31ae0082fe" // string | The customer ID
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
@@ -488,7 +578,7 @@ func main() {
         fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.GetCustomer``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
-    // response from `GetCustomer`: Customer
+    // response from `GetCustomer`: CustomerResponseDto
     fmt.Fprintf(os.Stdout, "Response from `CustomersApi.GetCustomer`: %v\n", resp)
 }
 ```
@@ -499,7 +589,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**customerId** | **string** | The identifier for the customer. You can pass in *either* the &#x60;customerId&#x60; (as defined by Kable) or the &#x60;clientId&#x60; (as defined by you). | 
+**customerId** | **string** | The customer ID | 
 
 ### Other Parameters
 
@@ -508,13 +598,13 @@ Other parameters are passed through a pointer to a apiGetCustomerRequest struct 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **kableClientId** | **string** | Your client ID, found in the dashboard of your Kable account. | 
- **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to fetch customers. | 
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
 
 
 ### Return type
 
-[**Customer**](Customer.md)
+[**CustomerResponseDto**](CustomerResponseDto.md)
 
 ### Authorization
 
@@ -530,11 +620,11 @@ No authorization required
 [[Back to README]](../README.md)
 
 
-## RemoveCustomerPlans
+## GetCustomerCreditBalance
 
-> Customer RemoveCustomerPlans(ctx, customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).AddCustomerPlansRequest(addCustomerPlansRequest).Execute()
+> CreditBalanceResponseDto GetCustomerCreditBalance(ctx, customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
 
-remove a plan(s) from a customer
+get customer credit balance
 
 
 
@@ -551,20 +641,19 @@ import (
 )
 
 func main() {
-    kableClientId := "kci_3c90e9ac92c64f31ae8ed84d21e18740" // string | Your client ID, found in the dashboard of your Kable account.
-    kableClientSecret := "sk_test.jI92Cbu0.XeHWdYM1VTLy4oLtGMw8wrmpt5q9d04n" // string | Your `LIVE` or `TEST` secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for `LIVE` and `TEST` environments of your API.
-    customerId := "cus_8276e1ac8ed84d21c64f31ae0082fe" // string | The identifier for the customer. You can pass in *either* the `customerId` (as defined by Kable) or the `clientId` (as defined by you).
-    addCustomerPlansRequest := *openapiclient.NewAddCustomerPlansRequest() // AddCustomerPlansRequest | Plan ID(s) to remove. You can provide either a singular `planId` or a list of `planIds`. (optional)
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+    customerId := "cus_8276e1ac8ed84d21c64f31ae0082fe" // string | The customer ID
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.CustomersApi.RemoveCustomerPlans(context.Background(), customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).AddCustomerPlansRequest(addCustomerPlansRequest).Execute()
+    resp, r, err := apiClient.CustomersApi.GetCustomerCreditBalance(context.Background(), customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
     if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.RemoveCustomerPlans``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.GetCustomerCreditBalance``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
-    // response from `RemoveCustomerPlans`: Customer
-    fmt.Fprintf(os.Stdout, "Response from `CustomersApi.RemoveCustomerPlans`: %v\n", resp)
+    // response from `GetCustomerCreditBalance`: CreditBalanceResponseDto
+    fmt.Fprintf(os.Stdout, "Response from `CustomersApi.GetCustomerCreditBalance`: %v\n", resp)
 }
 ```
 
@@ -574,23 +663,393 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**customerId** | **string** | The identifier for the customer. You can pass in *either* the &#x60;customerId&#x60; (as defined by Kable) or the &#x60;clientId&#x60; (as defined by you). | 
+**customerId** | **string** | The customer ID | 
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiRemoveCustomerPlansRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiGetCustomerCreditBalanceRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **kableClientId** | **string** | Your client ID, found in the dashboard of your Kable account. | 
- **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments of your API. | 
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
 
- **addCustomerPlansRequest** | [**AddCustomerPlansRequest**](AddCustomerPlansRequest.md) | Plan ID(s) to remove. You can provide either a singular &#x60;planId&#x60; or a list of &#x60;planIds&#x60;. | 
 
 ### Return type
 
-[**Customer**](Customer.md)
+[**CreditBalanceResponseDto**](CreditBalanceResponseDto.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetCustomerEntitlement
+
+> CustomerEntitlementResponseDto GetCustomerEntitlement(ctx, customerId, entitlementId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
+
+get customer entitlement
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+    customerId := "cus_2a3b4c5d6e7f8g9h0i1j2k3l4m5n6o7p" // string | The customer ID
+    entitlementId := "ent_4d5e6f7g8h9i0j1k2l3m4n5o6p1a2b3c" // string | The entitlement ID
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.CustomersApi.GetCustomerEntitlement(context.Background(), customerId, entitlementId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.GetCustomerEntitlement``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetCustomerEntitlement`: CustomerEntitlementResponseDto
+    fmt.Fprintf(os.Stdout, "Response from `CustomersApi.GetCustomerEntitlement`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**customerId** | **string** | The customer ID | 
+**entitlementId** | **string** | The entitlement ID | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetCustomerEntitlementRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
+
+
+
+### Return type
+
+[**CustomerEntitlementResponseDto**](CustomerEntitlementResponseDto.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetCustomerEntitlements
+
+> []CustomerEntitlementResponseDto GetCustomerEntitlements(ctx, customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
+
+get all customer entitlements
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+    customerId := "cus_2a3b4c5d6e7f8g9h0i1j2k3l4m5n6o7p" // string | The customer ID
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.CustomersApi.GetCustomerEntitlements(context.Background(), customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.GetCustomerEntitlements``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetCustomerEntitlements`: []CustomerEntitlementResponseDto
+    fmt.Fprintf(os.Stdout, "Response from `CustomersApi.GetCustomerEntitlements`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**customerId** | **string** | The customer ID | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetCustomerEntitlementsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
+
+
+### Return type
+
+[**[]CustomerEntitlementResponseDto**](CustomerEntitlementResponseDto.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetCustomers
+
+> []CustomerResponseDto GetCustomers(ctx).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
+
+get all customers
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.CustomersApi.GetCustomers(context.Background()).KableClientId(kableClientId).KableClientSecret(kableClientSecret).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.GetCustomers``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetCustomers`: []CustomerResponseDto
+    fmt.Fprintf(os.Stdout, "Response from `CustomersApi.GetCustomers`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetCustomersRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
+
+### Return type
+
+[**[]CustomerResponseDto**](CustomerResponseDto.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## RemoveCustomerBundle
+
+> CustomerResponseDto RemoveCustomerBundle(ctx, customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).RemoveCustomerBundleRequestDto(removeCustomerBundleRequestDto).Execute()
+
+remove customer bundle
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+    customerId := "cus_8276e1ac8ed84d21c64f31ae0082fe" // string | The customer ID
+    removeCustomerBundleRequestDto := *openapiclient.NewRemoveCustomerBundleRequestDto("bun_a23e148584d0463482c961b7f62f824c") // RemoveCustomerBundleRequestDto | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.CustomersApi.RemoveCustomerBundle(context.Background(), customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).RemoveCustomerBundleRequestDto(removeCustomerBundleRequestDto).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.RemoveCustomerBundle``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `RemoveCustomerBundle`: CustomerResponseDto
+    fmt.Fprintf(os.Stdout, "Response from `CustomersApi.RemoveCustomerBundle`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**customerId** | **string** | The customer ID | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiRemoveCustomerBundleRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
+
+ **removeCustomerBundleRequestDto** | [**RemoveCustomerBundleRequestDto**](RemoveCustomerBundleRequestDto.md) |  | 
+
+### Return type
+
+[**CustomerResponseDto**](CustomerResponseDto.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## RemoveCustomerPlan
+
+> CustomerResponseDto RemoveCustomerPlan(ctx, customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).RemoveCustomerPlansRequestDto(removeCustomerPlansRequestDto).Execute()
+
+remove customer plan(s)
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+    customerId := "cus_8276e1ac8ed84d21c64f31ae0082fe" // string | The customer ID
+    removeCustomerPlansRequestDto := *openapiclient.NewRemoveCustomerPlansRequestDto() // RemoveCustomerPlansRequestDto | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.CustomersApi.RemoveCustomerPlan(context.Background(), customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).RemoveCustomerPlansRequestDto(removeCustomerPlansRequestDto).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.RemoveCustomerPlan``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `RemoveCustomerPlan`: CustomerResponseDto
+    fmt.Fprintf(os.Stdout, "Response from `CustomersApi.RemoveCustomerPlan`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**customerId** | **string** | The customer ID | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiRemoveCustomerPlanRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
+
+ **removeCustomerPlansRequestDto** | [**RemoveCustomerPlansRequestDto**](RemoveCustomerPlansRequestDto.md) |  | 
+
+### Return type
+
+[**CustomerResponseDto**](CustomerResponseDto.md)
 
 ### Authorization
 
@@ -608,9 +1067,9 @@ No authorization required
 
 ## UpdateCustomer
 
-> Customer UpdateCustomer(ctx, customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).UpdateCustomerRequest(updateCustomerRequest).Execute()
+> CustomerResponseDto UpdateCustomer(ctx, customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).UpdateCustomerRequestDto(updateCustomerRequestDto).Execute()
 
-update a customer
+update customer
 
 
 
@@ -627,19 +1086,19 @@ import (
 )
 
 func main() {
-    kableClientId := "kci_3c90e9ac92c64f31ae8ed84d21e18740" // string | Your client ID, found in the dashboard of your Kable account.
-    kableClientSecret := "sk_test.jI92Cbu0.XeHWdYM1VTLy4oLtGMw8wrmpt5q9d04n" // string | Your `LIVE` or `TEST` secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for `LIVE` and `TEST` environments of your API.
-    customerId := "cus_8276e1ac8ed84d21c64f31ae0082fe" // string | The identifier for the customer. You can pass in *either* the `customerId` (as defined by Kable) or the `clientId` (as defined by you).
-    updateCustomerRequest := *openapiclient.NewUpdateCustomerRequest() // UpdateCustomerRequest | Information to update about the customer. (optional)
+    kableClientId := "kableClientId_example" // string | Your Kable client ID, found in the dashboard of your Kable account.
+    kableClientSecret := "kableClientSecret_example" // string | Your `LIVE` or `TEST` secret key.
+    customerId := "cus_8276e1ac8ed84d21c64f31ae0082fe" // string | The customer ID
+    updateCustomerRequestDto := *openapiclient.NewUpdateCustomerRequestDto() // UpdateCustomerRequestDto | 
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.CustomersApi.UpdateCustomer(context.Background(), customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).UpdateCustomerRequest(updateCustomerRequest).Execute()
+    resp, r, err := apiClient.CustomersApi.UpdateCustomer(context.Background(), customerId).KableClientId(kableClientId).KableClientSecret(kableClientSecret).UpdateCustomerRequestDto(updateCustomerRequestDto).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.UpdateCustomer``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
-    // response from `UpdateCustomer`: Customer
+    // response from `UpdateCustomer`: CustomerResponseDto
     fmt.Fprintf(os.Stdout, "Response from `CustomersApi.UpdateCustomer`: %v\n", resp)
 }
 ```
@@ -650,7 +1109,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**customerId** | **string** | The identifier for the customer. You can pass in *either* the &#x60;customerId&#x60; (as defined by Kable) or the &#x60;clientId&#x60; (as defined by you). | 
+**customerId** | **string** | The customer ID | 
 
 ### Other Parameters
 
@@ -659,14 +1118,14 @@ Other parameters are passed through a pointer to a apiUpdateCustomerRequest stru
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **kableClientId** | **string** | Your client ID, found in the dashboard of your Kable account. | 
- **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. Customers exist across all environments, so it does not matter which environment you use to create customers. Each customer will have separate keys for &#x60;LIVE&#x60; and &#x60;TEST&#x60; environments of your API. | 
+ **kableClientId** | **string** | Your Kable client ID, found in the dashboard of your Kable account. | 
+ **kableClientSecret** | **string** | Your &#x60;LIVE&#x60; or &#x60;TEST&#x60; secret key. | 
 
- **updateCustomerRequest** | [**UpdateCustomerRequest**](UpdateCustomerRequest.md) | Information to update about the customer. | 
+ **updateCustomerRequestDto** | [**UpdateCustomerRequestDto**](UpdateCustomerRequestDto.md) |  | 
 
 ### Return type
 
-[**Customer**](Customer.md)
+[**CustomerResponseDto**](CustomerResponseDto.md)
 
 ### Authorization
 

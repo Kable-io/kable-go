@@ -45,9 +45,9 @@ func (e *EventsApi) flush() {
 		return
 	}
 
-	req := e.api.EventsApi.CreateEvents(context.Background())
+	req := e.api.EventsApi.CreateEvent(context.Background())
 
-	var openapiEvents []openapi.Event
+	var openapiEvents []openapi.EventDto
 	for _, event := range e.queue {
 		var timestamp = time.Now()
 		if event.Timestamp != nil {
@@ -59,7 +59,7 @@ func (e *EventsApi) flush() {
 			event.TransactionId = transactionId
 		}
 
-		openapiEvents = append(openapiEvents, openapi.Event{
+		openapiEvents = append(openapiEvents, openapi.EventDto{
 			ClientId:      event.ClientId,
 			Timestamp:     timestamp,
 			TransactionId: &event.TransactionId,
@@ -72,8 +72,7 @@ func (e *EventsApi) flush() {
 	if e.options.Debug {
 		log.Printf("[KABLE] Flushing %d events", countToSend)
 	}
-
-	req = req.Event(openapiEvents)
+	req = req.EventDto(openapiEvents)
 	req = req.KableClientId(e.options.KableClientId)
 	req = req.KableClientSecret(e.options.KableClientSecret)
 
