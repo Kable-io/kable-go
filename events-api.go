@@ -126,12 +126,9 @@ func (e *EventsApi) handleShutdown(stop context.CancelFunc) {
 }
 
 func NewEventsApi(apiClient *openapi.APIClient, options *KableOptions) *EventsApi {
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
-
 	eventsApi := &EventsApi{
 		api:     apiClient,
 		options: options,
-		ctx:     ctx,
 	}
 
 	// if the queue size is less than 2, then recording any number of events will result
@@ -143,10 +140,14 @@ func NewEventsApi(apiClient *openapi.APIClient, options *KableOptions) *EventsAp
 		eventsApi.queue = make([]Event, 0, options.MaxQueueSize)
 	}
 
-	go eventsApi.scheduleFlushQueue()
-	go eventsApi.handleShutdown(stop)
+	// only start the scheduled goroutines if the queue was initialized
+	if eventsApi.queue != nil {
+		ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+		eventsApi.ctx = ctx
 
-	// Listening to the OS Signals
+		go eventsApi.scheduleFlushQueue()
+		go eventsApi.handleShutdown(stop)
+	}
 
 	return eventsApi
 }
