@@ -30,25 +30,11 @@ type EventsApi struct {
 	lock    sync.Mutex
 }
 
-func (e *EventsApi) flush() {
-	e.lock.Lock()
-	defer e.lock.Unlock()
-
-	if e.options.Debug {
-		log.Printf("[KABLE] Flushing Kable event queue...")
-	}
-
-	if len(e.queue) <= 0 {
-		if e.options.Debug {
-			log.Printf("[KABLE] ...no Kable events to flush...")
-		}
-		return
-	}
-
+func (e *EventsApi) sendEvents(events []Event) int {
 	req := e.api.EventsApi.CreateEvents(context.Background())
 
 	var openapiEvents []openapi.Event
-	for _, event := range e.queue {
+	for _, event := range events {
 		var timestamp = time.Now()
 		if event.Timestamp != nil {
 			timestamp = *event.Timestamp
@@ -88,10 +74,30 @@ func (e *EventsApi) flush() {
 				log.Printf("[KABLE] Kable Event (Error): %s", jsonEvent)
 			}
 		}
-		return
+		return 0
 	}
 
 	log.Printf("[KABLE] Successfully sent %d events to Kable server", countToSend)
+
+	return countToSend
+}
+
+func (e *EventsApi) flush() {
+	e.lock.Lock()
+	defer e.lock.Unlock()
+
+	if e.options.Debug {
+		log.Printf("[KABLE] Flushing Kable event queue...")
+	}
+
+	if len(e.queue) <= 0 {
+		if e.options.Debug {
+			log.Printf("[KABLE] ...no Kable events to flush...")
+		}
+		return
+	}
+
+	countToSend := e.sendEvents(e.queue)
 
 	// Remove events from queue that have been sent
 	e.queue = e.queue[countToSend:]
@@ -138,6 +144,13 @@ func NewEventsApi(apiClient *openapi.APIClient, options *KableOptions) *EventsAp
 }
 
 func (e *EventsApi) EnqueueEvent(events ...Event) {
+	// if queue size is less than 2, then no need to add the events to the queue, so send
+	// them directly and return(no need to clear the queue, as it must be already empty).
+	if e.options.MaxQueueSize < 2 {
+		e.sendEvents(events)
+		return
+	}
+
 	// acquire the lock while modifying the queue, to prevent concurrent modifications
 	// to the queue from other EnqueueEvent calls, and wait for any ongoing flush call.
 	e.lock.Lock()
