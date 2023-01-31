@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/Kable-io/kable-go/internal/auth"
+	"github.com/Kable-io/kable-go/v2/internal/auth"
 )
 
 type AuthenticateApi struct {
