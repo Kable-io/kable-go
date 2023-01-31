@@ -138,8 +138,14 @@ func NewEventsApi(apiClient *openapi.APIClient, options *KableOptions) *EventsAp
 }
 
 func (e *EventsApi) EnqueueEvent(events ...Event) {
+	// acquire the lock while modifying the queue, to prevent concurrent modifications
+	// to the queue from other EnqueueEvent calls, and wait for any ongoing flush call.
+	e.lock.Lock()
 	e.queue = append(e.queue, events...)
-	if len(e.queue) >= e.options.MaxQueueSize {
+	queueLen := len(e.queue)
+	e.lock.Unlock()
+
+	if queueLen >= e.options.MaxQueueSize {
 		e.flush()
 	}
 }
