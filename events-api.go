@@ -30,7 +30,7 @@ type EventsApi struct {
 	lock    sync.Mutex
 }
 
-func (e *EventsApi) sendEvents(events []Event) int {
+func (e *EventsApi) sendEvents(events []Event) error {
 	req := e.api.EventsApi.CreateEvents(context.Background())
 
 	var openapiEvents []openapi.Event
@@ -56,7 +56,7 @@ func (e *EventsApi) sendEvents(events []Event) int {
 	var countToSend = len(openapiEvents)
 
 	if e.options.Debug {
-		log.Printf("[KABLE] Flushing %d events", countToSend)
+		log.Printf("[KABLE] Sending %d events", countToSend)
 	}
 
 	req = req.Event(openapiEvents)
@@ -74,12 +74,12 @@ func (e *EventsApi) sendEvents(events []Event) int {
 				log.Printf("[KABLE] Kable Event (Error): %s", jsonEvent)
 			}
 		}
-		return 0
+		return err
 	}
 
 	log.Printf("[KABLE] Successfully sent %d events to Kable server", countToSend)
 
-	return countToSend
+	return nil
 }
 
 func (e *EventsApi) flush() {
@@ -97,10 +97,13 @@ func (e *EventsApi) flush() {
 		return
 	}
 
-	countToSend := e.sendEvents(e.queue)
+	err := e.sendEvents(e.queue)
+	if err != nil {
+		return // return without clearing the queue
+	}
 
-	// Remove events from queue that have been sent
-	e.queue = e.queue[countToSend:]
+	// clear all events from the queue, as they must have been sent successfully
+	e.queue = e.queue[:0]
 }
 
 func (e *EventsApi) scheduleFlushQueue() {
