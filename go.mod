@@ -1,4 +1,4 @@
-module github.com/Kable-io/kable-go
+module github.com/Kable-io/kable-go/v2
 
 go 1.19
 

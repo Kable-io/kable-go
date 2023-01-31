@@ -8,7 +8,7 @@ import (
 
 	"github.com/joho/godotenv"
 
-	"github.com/Kable-io/kable-go"
+	"github.com/Kable-io/kable-go/v2"
 )
 
 func TestRecord(t *testing.T) {
