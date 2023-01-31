@@ -10,7 +10,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Kable-io/kable-go/internal/openapi"
+	"github.com/Kable-io/kable-go/v2/internal/openapi"
 	"github.com/ehsaniara/gointerlock"
 	"github.com/google/uuid"
 )
@@ -159,7 +159,10 @@ func (e *EventsApi) EnqueueEvent(events ...Event) {
 	// if queue size is less than 2, then no need to add the events to the queue, so send
 	// them directly and return(no need to clear the queue, as it must be already empty).
 	if e.options.MaxQueueSize < 2 {
-		e.sendEvents(events)
+		err := e.sendEvents(events)
+		if err != nil {
+			return // return without retry - the events will be logged in the sendEvents functions
+		}
 		return
 	}
 

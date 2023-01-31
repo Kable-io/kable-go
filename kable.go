@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Kable-io/kable-go/internal/auth"
-	"github.com/Kable-io/kable-go/internal/openapi"
+	"github.com/Kable-io/kable-go/v2/internal/auth"
+	"github.com/Kable-io/kable-go/v2/internal/openapi"
 )
 
 type (
